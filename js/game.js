@@ -10,64 +10,101 @@ class Estado{
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0]
     ];
+    // Locais onde é possível realizar a próxima jogada
     proximasJogadas = [7,7,7,7,7,7,7,7];
-    ultimoJogador = null;
-    ultimaPosicaoJogada = [0,0];
+    // Jogador que jogou neste estado (-1 = jogador1, 1=jogador2/IA)
+    jogadorAtual = null;
+    // Posição que jogador jogou neste estado
+    posicaoJogada = [-1,-1];
+    // Valor de minMax neste estado
     minMax = 0;
 
-    updateParametros() {
-
+    // colunaProximaJogada = coluna do tabuleiro onde irá ser realizada a próxima jogada
+    //updateParametros(jogadorAtualPai, proximasJogadasPai, tabuleiroPai, colunaProximaJogada) {
+    updateParametros(colunaProximaJogada) {
+        this.posicaoJogada = [this.proximasJogadas[colunaProximaJogada], colunaProximaJogada];
+        this.tabuleiro[this.proximasJogadas[colunaProximaJogada]][colunaProximaJogada] = this.jogadorAtual;
+        this.proximasJogadas[colunaProximaJogada]--;
     }
-    updateMinMax() {
-        this.minMax = this.verificaVencedor(this.ultimaPosicaoJogada);
 
-        if (this.minMax !== this.ultimoJogador) {
+
+
+    geraFilhos() {
+        let filhos = [];
+        let estadoNovo;
+        for(let i = 0; i < 8; i++){
+            if(this.proximasJogadas[i] >= 0)
+            {
+                estadoNovo = this.clone();
+                if(this.jogadorAtual == null){
+                    estadoNovo.jogadorAtual = -1;
+                }else{
+                    estadoNovo.jogadorAtual = (this.jogadorAtual === -1) ? 1 : -1;
+                }
+
+                estadoNovo.updateParametros(i);
+                estadoNovo.updateMinMax();
+
+                filhos.push(estadoNovo);
+            }
+        }
+        return filhos;
+    }
+
+    updateMinMax() {
+        if(this.posicaoJogada == null){
+            return 0;
+        }
+        this.minMax = this.verificaVencedor(this.posicaoJogada);
+
+        if (this.minMax !== this.jogadorAtual) {
             let vizinhosValidos = [];
             // cima
-            if (this.ultimaPosicaoJogada[0] - 1 >= 0 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0] - 1][this.ultimaPosicaoJogada[1]] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0] - 1, this.ultimaPosicaoJogada[1]]);
+            if (this.posicaoJogada[0] - 1 >= 0 &&
+                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1]] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0] - 1, this.posicaoJogada[1]]);
             }
             // baixo
-            if (this.ultimaPosicaoJogada[0] + 1 < 8 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0] + 1][this.ultimaPosicaoJogada[1]] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0] + 1, this.ultimaPosicaoJogada[1]]);
+            if (this.posicaoJogada[0] + 1 < 8 &&
+                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1]] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0] + 1, this.posicaoJogada[1]]);
             }
             // direita
-            if (this.ultimaPosicaoJogada[1] + 1 < 8 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0]][this.ultimaPosicaoJogada[1] + 1] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0], this.ultimaPosicaoJogada[1] + 1]);
+            if (this.posicaoJogada[1] + 1 < 8 &&
+                this.tabuleiro[this.posicaoJogada[0]][this.posicaoJogada[1] + 1] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0], this.posicaoJogada[1] + 1]);
             }
             // esquerda
-            if (this.ultimaPosicaoJogada[1] - 1 >= 0 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0]][this.ultimaPosicaoJogada[1] - 1] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0], this.ultimaPosicaoJogada[1] - 1]);
+            if (this.posicaoJogada[1] - 1 >= 0 &&
+                this.tabuleiro[this.posicaoJogada[0]][this.posicaoJogada[1] - 1] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0], this.posicaoJogada[1] - 1]);
             }
             // diagonal superior direita
-            if (this.ultimaPosicaoJogada[0] - 1 >= 0 && this.ultimaPosicaoJogada[1] + 1 < 8 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0] - 1][this.ultimaPosicaoJogada[1] + 1] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0] - 1, this.ultimaPosicaoJogada[1] + 1]);
+            if (this.posicaoJogada[0] - 1 >= 0 && this.posicaoJogada[1] + 1 < 8 &&
+                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1] + 1] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0] - 1, this.posicaoJogada[1] + 1]);
             }
             // diagonal inferior direita
-            if (this.ultimaPosicaoJogada[0] + 1 < 8 && this.ultimaPosicaoJogada[1] + 1 < 8 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0] + 1][this.ultimaPosicaoJogada[1] + 1] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0] + 1, this.ultimaPosicaoJogada[1] + 1]);
+            if (this.posicaoJogada[0] + 1 < 8 && this.posicaoJogada[1] + 1 < 8 &&
+                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1] + 1] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0] + 1, this.posicaoJogada[1] + 1]);
             }
             // diagonal inferior esquerda
-            if (this.ultimaPosicaoJogada[0] + 1 < 8 && this.ultimaPosicaoJogada[1] - 1 >= 0 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0] + 1][this.ultimaPosicaoJogada[1] - 1] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0] + 1, this.ultimaPosicaoJogada[1] - 1]);
+            if (this.posicaoJogada[0] + 1 < 8 && this.posicaoJogada[1] - 1 >= 0 &&
+                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1] - 1] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0] + 1, this.posicaoJogada[1] - 1]);
             }
             // diagonal superior esquerda
-            if (this.ultimaPosicaoJogada[0] - 1 >= 0 && this.ultimaPosicaoJogada[1] - 1 >= 0 &&
-                this.tabuleiro[this.ultimaPosicaoJogada[0] - 1][this.ultimaPosicaoJogada[1] - 1] === this.ultimoJogador) {
-                vizinhosValidos.push([this.ultimaPosicaoJogada[0] - 1, this.ultimaPosicaoJogada[1] - 1]);
+            if (this.posicaoJogada[0] - 1 >= 0 && this.posicaoJogada[1] - 1 >= 0 &&
+                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1] - 1] === this.jogadorAtual) {
+                vizinhosValidos.push([this.posicaoJogada[0] - 1, this.posicaoJogada[1] - 1]);
             }
 
             // Para cada vizinho válido, verifica se existe vencedor
             for (let i = 0; i < vizinhosValidos.length; i++) {
+
                 this.minMax = this.verificaVencedor(vizinhosValidos[i]);
-                if (this.minMax === this.ultimoJogador)
+                if (this.minMax === this.jogadorAtual)
                     return;
             }
         }
@@ -80,14 +117,15 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[1]+1; i <= posicaoFinal[1]; i++){
-                if(this.tabuleiro[posicao[0]][i] === this.ultimoJogador){
+
+                if(this.tabuleiro[posicao[0]][i] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[1]+1;
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela esquerda
@@ -96,14 +134,14 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[1]-1; i >= posicaoFinal[1]; i--){
-                if(this.tabuleiro[posicao[0]][i] === this.ultimoJogador){
+                if(this.tabuleiro[posicao[0]][i] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
-                    i = posicaoFinal[1]+1;
+                    i = posicaoFinal[1]-1;
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar por cima
@@ -112,14 +150,14 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1; i >= posicaoFinal[0]; i--){
-                if(this.tabuleiro[i][posicao[1]] === this.ultimoJogador){
+                if(this.tabuleiro[i][posicao[1]] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[0]-1;
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar por cima
@@ -128,14 +166,14 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1; i <= posicaoFinal[0]; i++){
-                if(this.tabuleiro[i][posicao[1]] === this.ultimoJogador){
+                if(this.tabuleiro[i][posicao[1]] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[0]-1;
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal superior direita
@@ -144,7 +182,7 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1, j = posicao[1]+1; i >= posicaoFinal[0] && j <= posicaoFinal[1]; i--, j++){
-                if(this.tabuleiro[i][j] === this.ultimoJogador){
+                if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[0]-1;
@@ -152,7 +190,7 @@ class Estado{
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal inferior direita
@@ -161,7 +199,7 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1, j = posicao[1]+1; i <= posicaoFinal[0] && j <= posicaoFinal[1]; i++, j++){
-                if(this.tabuleiro[i][j] === this.ultimoJogador){
+                if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[0]+1;
@@ -169,7 +207,7 @@ class Estado{
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal inferior esquerda
@@ -178,7 +216,7 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1, j = posicao[1]-1; i <= posicaoFinal[0] && j >= posicaoFinal[1]; i++, j--){
-                if(this.tabuleiro[i][j] === this.ultimoJogador){
+                if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[0]+1;
@@ -186,7 +224,7 @@ class Estado{
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal superior esquerda
@@ -195,7 +233,7 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1, j = posicao[1]-1; i >= posicaoFinal[0] && j >= posicaoFinal[1]; i--, j--){
-                if(this.tabuleiro[i][j] === this.ultimoJogador){
+                if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
                 }else{
                     i = posicaoFinal[0]-1;
@@ -203,7 +241,7 @@ class Estado{
                 }
             }
             if(contadorPecas === 4){
-                return this.ultimoJogador;
+                return this.jogadorAtual;
             }
         }
         return 0;
@@ -211,14 +249,44 @@ class Estado{
 
     // Funções
     printaTabuleiro() {
-        console.log(this.tabuleiro[0][0]);
-        console.log(this.ultimoJogador);
+        console.log(this.tabuleiro);
+        console.log(this.proximasJogadas);
+        console.log(this.posicaoJogada);
+        console.log("Jogador Atual " + this.jogadorAtual);
+        console.log("MinMax " + this.minMax);
+    }
+
+    clone(){
+        let novo = new Estado();
+        novo.jogadorAtual = this.jogadorAtual;
+        novo.minMax = this.minMax;
+
+        for(let i = 0; i < 8; i++){
+            novo.proximasJogadas[i] = this.proximasJogadas[i];
+            for(let j = 0; j < 8; j++){
+                novo.tabuleiro[i][j] = this.tabuleiro[i][j];
+            }
+        }
+
+        novo.posicaoJogada[0] = this.posicaoJogada[0];
+        novo.posicaoJogada[1] = this.posicaoJogada[1];
+
+        /*if(this.posicaoJogada !== null){
+            if(novo.posicaoJogada == null){
+                console.log("oi");
+            }else {
+
+            }
+
+        }else{
+            console.log("é nulo");
+        }*/
+
+        return novo;
     }
 }
 
-let estado = new Estado();
-estado.printaTabuleiro();
-
+/*
 
 class quatro_em_linha {
     estadoAtual;
@@ -227,17 +295,6 @@ class quatro_em_linha {
         this.estadoAtual = new Estado();
     }
 
-    geraEstados(){
-        let filhos = [];
-        let estadoNovo;
-        for(let i = 0; i < 8; i++){
-            if(this.estadoAtual.proximasJogadas[i] >= 0)
-            {
-                estadoNovo = new Estado();
-                estadoNovo.updateMinMax();
-                filhos.push(estadoNovo);
-            }
-        }
-    }
 };
 
+*/
