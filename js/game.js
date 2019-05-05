@@ -271,22 +271,37 @@ class Estado{
         novo.posicaoJogada[0] = this.posicaoJogada[0];
         novo.posicaoJogada[1] = this.posicaoJogada[1];
 
-        /*if(this.posicaoJogada !== null){
-            if(novo.posicaoJogada == null){
-                console.log("oi");
-            }else {
-
-            }
-
-        }else{
-            console.log("é nulo");
-        }*/
-
         return novo;
     }
 }
+function coluna0f(){
+    console.log("a");
+}
 
-/*
+let divName = "";
+for(let i=0; i < 8; i++) {
+    for (let j=0; j < 8; j++) {
+        divName = i + "-" + j;
+        if (i === 0) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 1) {
+            document.getElementById(divName).addEventListener("click", coluna1f);
+        } else if (i === 2) {
+            document.getElementById(divName).addEventListener("click", coluna2f);
+        } else if (i === 3) {
+            document.getElementById(divName).addEventListener("click", coluna3f);
+        } else if (i === 4) {
+            document.getElementById(divName).addEventListener("click", coluna4f);
+        } else if (i === 5) {
+            document.getElementById(divName).addEventListener("click", coluna5f);
+        } else if (i === 6) {
+            document.getElementById(divName).addEventListener("click", coluna6f);
+        } else if (i === 7) {
+            document.getElementById(divName).addEventListener("click", coluna7f);
+        }
+
+    }
+}
 
 class quatro_em_linha {
     estadoAtual;
@@ -295,6 +310,6 @@ class quatro_em_linha {
         this.estadoAtual = new Estado();
     }
 
-};
+    
 
-*/
+};
