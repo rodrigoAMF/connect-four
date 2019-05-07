@@ -1,62 +1,62 @@
-.fundo
-{
+/*Estilos necessario para todas as páginas */
+body{
 	background-image: url("../img/fundo.png");
-	margin-top: 30px;
-	height: 570px;
-	border-radius: 10px;
 }
 
-.conteudo
-{
-	margin-top: 50px;
+.fundo{
+		background-color: #FFFAF0;
+		margin-top: 30px;
+		height: 570px;
+		border-radius: 10px;
 }
 
-button
-{
+button{
 	width: 300px;
 }
 
-a:hover {
-text-decoration:underline;
-}
-
-.dificuldade button
-{
+/*Estilos necessario para a página inicial */
+.paginaInicial img{
 	margin-top: 50px;
 }
 
-.botoes
-{
+/*Estilos necessario para a página de dificuldade */
+.conteudoDificuldade{
 	margin-top: 60px;
 }
 
-h2
-{
-	color:white;
+.paginaDificuldade button{
 	margin-top: 50px;
+}
+
+.paginaDificuldade h2{
 	margin-left: 50px;
 }
 
-.row div {
-	background-image: url("../img/fundo.png");
-  float: left;
-  width: 60px;
-  height: 60px;
-  border: 1px solid #000;
-  text-align: center;
-  border-radius: 60px;
-  margin-bottom: 8px;
+/*Estilos necessarios para página de jogo*/
+
+.line-0{
+	margin-top: 5px;
 }
 
-.tabuleiro
-{
+.linha div {
+	background: white;
+	//background-image: url("../img/fundo.png");
+  float: left;
+  width: 55px;
+  height: 55px;
+  border: 2px solid #000;
+  border-radius: 60px;
+  margin: 2px;
+}
+
+.tabuleiro{
 	background: black;
-	margin-left: 30px;
-	margin-top: 19px;
-	border: 3px solid #000;
-	width: 490px;
-	height: 541px;
-	border-radius: 5px;
+	margin-left: 10px;
+	margin-top: 40px;
+	border: 4px solid #000;
+	width: 510px;
+	height: 490px;
+	border-radius: 10px;
 	cursor: pointer;
 	float: left;
 }
