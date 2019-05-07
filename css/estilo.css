@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+.fundo
+{
+=======
+<<<<<<< HEAD
 .fundo
 {
 	background-image: url("../img/fundo.png");
@@ -60,3 +65,72 @@ h2
 	cursor: pointer;
 	float: left;
 }
+=======
+/*Estilos necessario para todas as páginas */
+body{
+>>>>>>> master
+	background-image: url("../img/fundo.png");
+	margin-top: 30px;
+	height: 570px;
+	border-radius: 10px;
+}
+
+.conteudo
+{
+	margin-top: 50px;
+}
+
+button
+{
+	width: 300px;
+}
+
+a:hover {
+text-decoration:underline;
+}
+
+.dificuldade button
+{
+	margin-top: 50px;
+}
+
+.botoes
+{
+	margin-top: 60px;
+}
+
+h2
+{
+	color:white;
+	margin-top: 50px;
+	margin-left: 50px;
+}
+
+.row div {
+	background-image: url("../img/fundo.png");
+  float: left;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #000;
+  text-align: center;
+  border-radius: 60px;
+  margin-bottom: 8px;
+}
+
+.tabuleiro
+{
+	background: black;
+	margin-left: 30px;
+	margin-top: 19px;
+	border: 3px solid #000;
+	width: 490px;
+	height: 541px;
+	border-radius: 5px;
+	cursor: pointer;
+	float: left;
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> master
+>>>>>>> master
