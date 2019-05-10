@@ -12,12 +12,16 @@ class Estado{
     ];
     // Locais onde é possível realizar a próxima jogada
     proximasJogadas = [7,7,7,7,7,7,7,7];
+    // Jogada atual (jogadaInicial = 1, jogadaFinal = 64)
+    jogadaAtual = 1;
     // Jogador que jogou neste estado (-1 = jogador1, 1=jogador2/IA)
     jogadorAtual = null;
     // Posição que jogador jogou neste estado
     posicaoJogada = [-1,-1];
     // Valor de minMax neste estado
     minMax = 0;
+    // Melhor jogada para o estado atual
+    melhorJogada = [];
 
     // colunaProximaJogada = coluna do tabuleiro onde irá ser realizada a próxima jogada
     //updateParametros(jogadorAtualPai, proximasJogadasPai, tabuleiroPai, colunaProximaJogada) {
@@ -25,21 +29,6 @@ class Estado{
         this.posicaoJogada = [this.proximasJogadas[colunaProximaJogada], colunaProximaJogada];
         this.tabuleiro[this.proximasJogadas[colunaProximaJogada]][colunaProximaJogada] = this.jogadorAtual;
         this.proximasJogadas[colunaProximaJogada]--;
-    }
-
-    verificaSeEhFimDeJogo(){
-        let iguais = true;
-        for(let i = 0; i < 7; i++){
-            if(this.proximasJogadas[i] != this.proximasJogadas[i+1]){
-                iguais = false;
-                break;
-            }
-        }
-        if(iguais && this.proximasJogadas[0] !== -1){
-            iguais = false;
-        }
-
-        return iguais;
     }
 
     geraFilhos() {
@@ -57,6 +46,7 @@ class Estado{
 
                 estadoNovo.updateParametros(i);
                 estadoNovo.updateMinMax();
+                estadoNovo.jogadaAtual = this.jogadaAtual+1;
 
                 filhos.push(estadoNovo);
             }
@@ -288,48 +278,25 @@ class Estado{
         return novo;
     }
 }
-/*
+
 function coluna0f(){
-    console.log("a");
+    console.log("Coluna 1");
 }
 
-let divName = "";
-for(let i=0; i < 8; i++) {
-    for (let j=0; j < 8; j++) {
-        divName = i + "-" + j;
-        if (i === 0) {
-            document.getElementById(divName).addEventListener("click", coluna0f);
-        } else if (i === 1) {
-            document.getElementById(divName).addEventListener("click", coluna1f);
-        } else if (i === 2) {
-            document.getElementById(divName).addEventListener("click", coluna2f);
-        } else if (i === 3) {
-            document.getElementById(divName).addEventListener("click", coluna3f);
-        } else if (i === 4) {
-            document.getElementById(divName).addEventListener("click", coluna4f);
-        } else if (i === 5) {
-            document.getElementById(divName).addEventListener("click", coluna5f);
-        } else if (i === 6) {
-            document.getElementById(divName).addEventListener("click", coluna6f);
-        } else if (i === 7) {
-            document.getElementById(divName).addEventListener("click", coluna7f);
-        }
-
-    }
-}
-*/
 class QuatroEmLinha {
-    estadoAtual = null;
+    estadoAtual = new Estado();
 
     constructor(){
-        this.estadoAtual = new Estado();
+        //this.estadoAtual = new Estado();
     }
 
     dfs(estado, nivel){
+        //console.log(1);
+
         let retornoDFS = 0;
 
-        if(estado.verificaSeEhFimDeJogo() || nivel === 4){
-            return estado.minMax;
+        if(estado.jogadaAtual === 64 || nivel === 5){
+            return;
         }
         let filhos = estado.geraFilhos();
 
@@ -344,7 +311,9 @@ class QuatroEmLinha {
         }
 
         for (let i = 0; i < filhos.length; i++) {
-            retornoDFS = this.dfs(filhos[i], nivel+1);
+            this.dfs(filhos[i], nivel+1);
+            retornoDFS = filhos[i].minMax;
+
             if(nivel%2 !== 0){
                 // Nível MAX
                 if(retornoDFS >= minMaxFinal){
@@ -360,29 +329,75 @@ class QuatroEmLinha {
         }
 
 
-        //let indiceMelhorJogada = 0;
+        let indiceMelhorJogada = 0;
         for (let i = 0; i < filhos.length; i++) {
             if(filhos%2 !== 0){
                 if(filhos[i].minMax > melhorJogada){
                     melhorJogada = filhos[i];
-                    //indiceMelhorJogada = i;
+                    indiceMelhorJogada = i;
                 }
             }else{
                 if(filhos[i].minMax < melhorJogada){
                     melhorJogada = filhos[i];
-                    //indiceMelhorJogada = i;
+                    indiceMelhorJogada = i;
                 }
             }
         }
 
-        return melhorJogada;
+        estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada;
+
+        //return melhorJogada;
     }
 }
 
+let divName = "";
+for(let i=0; i < 8; i++) {
+    for (let j=0; j < 8; j++) {
+        divName = "posicao" + i + "-" + j;
+        if (i === 0) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 1) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 2) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 3) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 4) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 5) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 6) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        } else if (i === 7) {
+            document.getElementById(divName).addEventListener("click", coluna0f);
+        }
+
+    }
+}
+
+/*
 let jogo = new QuatroEmLinha();
 
-//let estado = jogo.dfs(jogo.estadoAtual, 1);
+let pai = new Estado();
 
-let filhos = jogo.estadoAtual.geraFilhos()[0].geraFilhos();
+let filhos = pai.geraFilhos()[0].geraFilhos()[0].geraFilhos();
 
-console.log(filhos);
+console.log(filhos[0].jogadaAtual);
+
+let string = "1234567812345678123456781234567812345678123456781234567812345678";
+
+console.log(string);
+
+console.log(string[2]);
+
+string[2] = "5";
+
+console.log(string[2]);
+*/
+/*
+jogo.dfs(jogo.estadoAtual, 1);
+
+let melhor = jogo.estadoAtual.melhorJogada;
+
+console.log(melhor);
+*/
