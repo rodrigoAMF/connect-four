@@ -27,7 +27,20 @@ class Estado{
         this.proximasJogadas[colunaProximaJogada]--;
     }
 
+    verificaSeEhFimDeJogo(){
+        let iguais = true;
+        for(let i = 0; i < 7; i++){
+            if(this.proximasJogadas[i] != this.proximasJogadas[i+1]){
+                iguais = false;
+                break;
+            }
+        }
+        if(iguais && this.proximasJogadas[0] !== -1){
+            iguais = false;
+        }
 
+        return iguais;
+    }
 
     geraFilhos() {
         let filhos = [];
@@ -244,6 +257,7 @@ class Estado{
                 return this.jogadorAtual;
             }
         }
+
         return 0;
     }
 
@@ -274,6 +288,7 @@ class Estado{
         return novo;
     }
 }
+/*
 function coluna0f(){
     console.log("a");
 }
@@ -302,14 +317,72 @@ for(let i=0; i < 8; i++) {
 
     }
 }
-
-class quatro_em_linha {
-    estadoAtual;
+*/
+class QuatroEmLinha {
+    estadoAtual = null;
 
     constructor(){
         this.estadoAtual = new Estado();
     }
 
-    
+    dfs(estado, nivel){
+        let retornoDFS = 0;
 
-};
+        if(estado.verificaSeEhFimDeJogo() || nivel === 4){
+            return estado.minMax;
+        }
+        let filhos = estado.geraFilhos();
+
+        let melhorJogada = null;
+
+        if(nivel%2 !== 0){
+            // Nivel impar (MAX)
+            var minMaxFinal = -10;
+        }else{
+            // Nível par (MIN)
+            var minMaxFinal = 10;
+        }
+
+        for (let i = 0; i < filhos.length; i++) {
+            retornoDFS = this.dfs(filhos[i], nivel+1);
+            if(nivel%2 !== 0){
+                // Nível MAX
+                if(retornoDFS >= minMaxFinal){
+                    minMaxFinal = retornoDFS;
+                }
+            }else{
+                // Nível MIN
+                if(retornoDFS <= minMaxFinal){
+                    minMaxFinal = retornoDFS;
+                }
+            }
+            estado.minMax = minMaxFinal;
+        }
+
+
+        //let indiceMelhorJogada = 0;
+        for (let i = 0; i < filhos.length; i++) {
+            if(filhos%2 !== 0){
+                if(filhos[i].minMax > melhorJogada){
+                    melhorJogada = filhos[i];
+                    //indiceMelhorJogada = i;
+                }
+            }else{
+                if(filhos[i].minMax < melhorJogada){
+                    melhorJogada = filhos[i];
+                    //indiceMelhorJogada = i;
+                }
+            }
+        }
+
+        return melhorJogada;
+    }
+}
+
+let jogo = new QuatroEmLinha();
+
+//let estado = jogo.dfs(jogo.estadoAtual, 1);
+
+let filhos = jogo.estadoAtual.geraFilhos()[0].geraFilhos();
+
+console.log(filhos);
