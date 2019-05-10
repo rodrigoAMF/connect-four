@@ -27,28 +27,28 @@ function clickColuna6(){
 }
 
 function clickColuna7(){
-    alert("Você clicou na coluna 0!");
+    alert("Você clicou na coluna 8!");
 }
 
 let divName = "";
 for(let i=0; i < 8; i++) {
     for (let j=0; j < 8; j++) {
         divName = "posicao" + i + "-" + j;
-        if (i === 0) {
+        if (j === 0) {
             document.getElementById(divName).addEventListener("click", clickColuna0);
-        } else if (i === 1) {
+        } else if (j === 1) {
             document.getElementById(divName).addEventListener("click", clickColuna1);
-        } else if (i === 2) {
+        } else if (j === 2) {
             document.getElementById(divName).addEventListener("click", clickColuna2);
-        } else if (i === 3) {
+        } else if (j === 3) {
             document.getElementById(divName).addEventListener("click", clickColuna3);
-        } else if (i === 4) {
+        } else if (j === 4) {
             document.getElementById(divName).addEventListener("click", clickColuna4);
-        } else if (i === 5) {
+        } else if (j === 5) {
             document.getElementById(divName).addEventListener("click", clickColuna5);
-        } else if (i === 6) {
+        } else if (j === 6) {
             document.getElementById(divName).addEventListener("click", clickColuna6);
-        } else if (i === 7) {
+        } else if (j === 7) {
             document.getElementById(divName).addEventListener("click", clickColuna7);
         }
 
