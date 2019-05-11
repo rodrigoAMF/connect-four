@@ -1,65 +1,57 @@
 class QuatroEmLinha{
+    alfa = -10;
+    beta = 10;
     estadoAtual = new Estado();
 
-    constructor(){
-        //this.estadoAtual = new Estado();
-    }
+    dfs(estado, nivelMax, nivel){
+        let retornoDFS, melhorJogada, indiceMelhorJogada;
 
-    dfs(estado, nivel){
-
-        let retornoDFS = 0;
-
-        if(estado.jogadaAtual === 64 || nivel === 8){
+        if(estado.jogadaAtual === 64 || nivel === 12){
             return;
         }
         let filhos = estado.geraFilhos();
 
-        let melhorJogada = null;
+        if(nivelMax){
+            // MAX
+            melhorJogada = -10;
 
-        if(nivel%2 !== 0){
-            // Nivel impar (MAX)
-            var minMaxFinal = -10;
+            for (let i = 0; i < filhos.length; i++) {
+                this.dfs(filhos[i], false,nivel + 1);
+                retornoDFS = filhos[i].minMax;
+
+                if (retornoDFS > melhorJogada) {
+                    melhorJogada = retornoDFS;
+                    indiceMelhorJogada = i;
+                }
+                if (melhorJogada > this.alfa) {
+                    this.alfa = melhorJogada;
+                }
+                if (melhorJogada >= this.beta) {
+                    break;
+                }
+            }
         }else{
-            // Nível par (MIN)
-            var minMaxFinal = 10;
-        }
+            // MIN
+            melhorJogada = 10;
 
-        for (let i = 0; i < filhos.length; i++) {
-            this.dfs(filhos[i], nivel+1);
-            retornoDFS = filhos[i].minMax;
+            for (let i = 0; i < filhos.length; i++) {
+                this.dfs(filhos[i], true,nivel + 1);
+                retornoDFS = filhos[i].minMax;
 
-            if(nivel%2 !== 0){
-                // Nível MAX
-                if(retornoDFS >= minMaxFinal){
-                    minMaxFinal = retornoDFS;
-                }
-            }else{
-                // Nível MIN
-                if(retornoDFS <= minMaxFinal){
-                    minMaxFinal = retornoDFS;
-                }
-            }
-            estado.minMax = minMaxFinal;
-        }
-
-
-        let indiceMelhorJogada = 0;
-        for (let i = 0; i < filhos.length; i++) {
-            if(filhos%2 !== 0){
-                if(filhos[i].minMax > melhorJogada){
-                    melhorJogada = filhos[i];
+                if (retornoDFS < melhorJogada) {
+                    melhorJogada = retornoDFS;
                     indiceMelhorJogada = i;
                 }
-            }else{
-                if(filhos[i].minMax < melhorJogada){
-                    melhorJogada = filhos[i];
-                    indiceMelhorJogada = i;
+                if (melhorJogada > this.beta) {
+                    this.beta = melhorJogada;
+                }
+                if (melhorJogada <= this.alfa) {
+                    break;
                 }
             }
         }
-
+        estado.minMax = melhorJogada;
         estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada;
-
-        //return melhorJogada;
     }
+
 }

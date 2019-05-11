@@ -58,7 +58,7 @@ for(let i=0; i < 8; i++) {
 
 let jogo = new QuatroEmLinha();
 
-jogo.dfs(jogo.estadoAtual, 1);
+jogo.dfs(jogo.estadoAtual, true,1);
 /*
 let pai = new Estado();
 
