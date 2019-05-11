@@ -22,6 +22,8 @@ class Estado{
     minMax = 0;
     // Melhor jogada para o estado atual
     melhorJogada = [];
+    // Flag determina o fim do jogo (1 = fim de jogo, 0 = jogo não terminou)
+    fimDeJogo = 0;
 
     // colunaProximaJogada = coluna do tabuleiro onde irá ser realizada a próxima jogada
     //updateParametros(jogadorAtualPai, proximasJogadasPai, tabuleiroPai, colunaProximaJogada) {
@@ -34,6 +36,7 @@ class Estado{
     geraFilhos() {
         let filhos = [];
         let estadoNovo;
+
         for(let i = 0; i < 8; i++){
             if(this.proximasJogadas[i] >= 0)
             {
@@ -46,6 +49,9 @@ class Estado{
 
                 estadoNovo.updateParametros(i);
                 estadoNovo.updateMinMax();
+                if(estadoNovo.minMax !== 0){
+                    estadoNovo.fimDeJogo = 1;
+                }
                 estadoNovo.jogadaAtual = this.jogadaAtual+1;
 
                 filhos.push(estadoNovo);

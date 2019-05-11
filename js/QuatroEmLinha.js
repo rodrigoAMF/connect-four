@@ -1,12 +1,18 @@
+let QuaatroEmLinha = {
+    alfa: -10,
+    beta: 10
+}
+
 class QuatroEmLinha{
     alfa = -10;
     beta = 10;
     estadoAtual = new Estado();
 
     dfs(estado, nivelMax, nivel){
+        //console.log(nivel);
         let retornoDFS, melhorJogada, indiceMelhorJogada;
 
-        if(estado.jogadaAtual === 64 || nivel === 12){
+        if(estado.jogadaAtual === 64 || nivel === 13){
             return;
         }
         let filhos = estado.geraFilhos();
@@ -16,19 +22,22 @@ class QuatroEmLinha{
             melhorJogada = -10;
 
             for (let i = 0; i < filhos.length; i++) {
-                this.dfs(filhos[i], false,nivel + 1);
-                retornoDFS = filhos[i].minMax;
+                if(filhos[i].fimDeJogo !== 1){
+                    this.dfs(filhos[i], false,nivel + 1);
+                    retornoDFS = filhos[i].minMax;
 
-                if (retornoDFS > melhorJogada) {
-                    melhorJogada = retornoDFS;
-                    indiceMelhorJogada = i;
+                    if (retornoDFS > melhorJogada) {
+                        melhorJogada = retornoDFS;
+                        indiceMelhorJogada = i;
+                    }
+                    if (melhorJogada > this.alfa) {
+                        this.alfa = melhorJogada;
+                    }
+                    if (melhorJogada >= this.beta) {
+                        break;
+                    }
                 }
-                if (melhorJogada > this.alfa) {
-                    this.alfa = melhorJogada;
-                }
-                if (melhorJogada >= this.beta) {
-                    break;
-                }
+
             }
         }else{
             // MIN
@@ -51,7 +60,7 @@ class QuatroEmLinha{
             }
         }
         estado.minMax = melhorJogada;
-        estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada;
+        //estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada;
     }
 
 }
