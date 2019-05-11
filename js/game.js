@@ -30,7 +30,7 @@ function clickColuna7(){
     alert("Você clicou na coluna 8!");
 }
 
-let divName = "";
+let divName;
 for(let i=0; i < 8; i++) {
     for (let j=0; j < 8; j++) {
         divName = "posicao" + i + "-" + j;
@@ -58,13 +58,15 @@ for(let i=0; i < 8; i++) {
 
 let jogo = new QuatroEmLinha();
 
-jogo.dfs(jogo.estadoAtual, 5);
+jogo.dfs(jogo.estadoAtual, 1);
 /*
 let pai = new Estado();
 
-let filhos = pai.geraFilhos()[0].geraFilhos()[0].geraFilhos();
+let filhos = pai.geraFilhos()[0].geraFilhos()[0].geraFilhos()[0].geraFilhos();
 
-console.log(filhos[0].jogadaAtual);
+console.log(filhos);
+
+
 
 let string = "1234567812345678123456781234567812345678123456781234567812345678";
 

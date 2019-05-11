@@ -45,7 +45,7 @@ class Estado{
                 }
 
                 estadoNovo.updateParametros(i);
-                //estadoNovo.updateMinMax();
+                estadoNovo.updateMinMax();
                 estadoNovo.jogadaAtual = this.jogadaAtual+1;
 
                 filhos.push(estadoNovo);
@@ -123,8 +123,6 @@ class Estado{
 
                 if(this.tabuleiro[posicao[0]][i] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[1]+1;
                 }
             }
             if(contadorPecas === 4){
@@ -132,6 +130,7 @@ class Estado{
             }
         }
         // verifica se é possível ganhar pela esquerda
+
         if(posicao[1]-3 >= 0) {
             let posicaoFinal = [posicao[0], posicao[1]-3];
             let contadorPecas = 1;
@@ -139,46 +138,49 @@ class Estado{
             for(let i = posicao[1]-1; i >= posicaoFinal[1]; i--){
                 if(this.tabuleiro[posicao[0]][i] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[1]-1;
                 }
             }
             if(contadorPecas === 4){
                 return this.jogadorAtual;
             }
         }
+
         // verifica se é possível ganhar por cima
         if(posicao[0]-3 >= 0) {
+
             let posicaoFinal = [posicao[0]-3, posicao[1]];
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1; i >= posicaoFinal[0]; i--){
                 if(this.tabuleiro[i][posicao[1]] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[0]-1;
                 }
             }
             if(contadorPecas === 4){
                 return this.jogadorAtual;
             }
         }
-        // verifica se é possível ganhar por cima
+
+        // verifica se é possível ganhar por baixo
         if(posicao[0]+3 < 8) {
             let posicaoFinal = [posicao[0]+3, posicao[1]];
             let contadorPecas = 1;
 
+            if(this.jogadaAtual === 4){
+                console.log(posicaoFinal);
+                console.log(posicao);
+            }
+
             for(let i = posicao[0]+1; i <= posicaoFinal[0]; i++){
                 if(this.tabuleiro[i][posicao[1]] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[0]-1;
                 }
             }
             if(contadorPecas === 4){
                 return this.jogadorAtual;
             }
         }
+
         // verifica se é possível ganhar pela diagonal superior direita
         if(posicao[0]-3 >= 0 && posicao[1]+3 < 8) {
             let posicaoFinal = [posicao[0]-3, posicao[1]+3];
@@ -187,9 +189,6 @@ class Estado{
             for(let i = posicao[0]-1, j = posicao[1]+1; i >= posicaoFinal[0] && j <= posicaoFinal[1]; i--, j++){
                 if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[0]-1;
-                    j = posicaoFinal[1]+1;
                 }
             }
             if(contadorPecas === 4){
@@ -204,9 +203,6 @@ class Estado{
             for(let i = posicao[0]+1, j = posicao[1]+1; i <= posicaoFinal[0] && j <= posicaoFinal[1]; i++, j++){
                 if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[0]+1;
-                    j = posicaoFinal[1]+1;
                 }
             }
             if(contadorPecas === 4){
@@ -221,9 +217,6 @@ class Estado{
             for(let i = posicao[0]+1, j = posicao[1]-1; i <= posicaoFinal[0] && j >= posicaoFinal[1]; i++, j--){
                 if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[0]+1;
-                    j = posicaoFinal[1]-1;
                 }
             }
             if(contadorPecas === 4){
@@ -238,9 +231,6 @@ class Estado{
             for(let i = posicao[0]-1, j = posicao[1]-1; i >= posicaoFinal[0] && j >= posicaoFinal[1]; i--, j--){
                 if(this.tabuleiro[i][j] === this.jogadorAtual){
                     contadorPecas++;
-                }else{
-                    i = posicaoFinal[0]-1;
-                    j = posicaoFinal[1]-1;
                 }
             }
             if(contadorPecas === 4){

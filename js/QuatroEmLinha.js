@@ -9,7 +9,7 @@ class QuatroEmLinha{
 
         let retornoDFS = 0;
 
-        if(estado.jogadaAtual === 64 || nivel === 7){
+        if(estado.jogadaAtual === 64 || nivel === 8){
             return;
         }
         let filhos = estado.geraFilhos();
