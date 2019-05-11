@@ -45,7 +45,7 @@ class Estado{
                 }
 
                 estadoNovo.updateParametros(i);
-                estadoNovo.updateMinMax();
+                //estadoNovo.updateMinMax();
                 estadoNovo.jogadaAtual = this.jogadaAtual+1;
 
                 filhos.push(estadoNovo);

@@ -1,4 +1,4 @@
-class QuatroEmLinha {
+class QuatroEmLinha{
     estadoAtual = new Estado();
 
     constructor(){
@@ -6,11 +6,10 @@ class QuatroEmLinha {
     }
 
     dfs(estado, nivel){
-        //console.log(1);
 
         let retornoDFS = 0;
 
-        if(estado.jogadaAtual === 64 || nivel === 5){
+        if(estado.jogadaAtual === 64 || nivel === 7){
             return;
         }
         let filhos = estado.geraFilhos();

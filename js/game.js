@@ -55,9 +55,11 @@ for(let i=0; i < 8; i++) {
     }
 }
 
-/*
+
 let jogo = new QuatroEmLinha();
 
+jogo.dfs(jogo.estadoAtual, 5);
+/*
 let pai = new Estado();
 
 let filhos = pai.geraFilhos()[0].geraFilhos()[0].geraFilhos();
