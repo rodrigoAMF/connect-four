@@ -56,9 +56,19 @@ for(let i=0; i < 8; i++) {
 }
 
 
-let jogo = new QuatroEmLinha();
+let jogo = new QuatroEmLinha(13);
+
+let start = performance.now();
 
 jogo.dfs(jogo.estadoAtual, true,1);
+
+let end = performance.now();
+let duration = (end - start)/(10**3);
+duration = duration.toFixed(2);
+
+
+
+alert("Finalizado execução da DFS com " + jogo.nivelMaximoDFS + " níveis de profundidade em " + duration + " segundos");
 /*
 let pai = new Estado();
 

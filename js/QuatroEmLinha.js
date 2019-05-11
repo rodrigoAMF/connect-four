@@ -6,13 +6,19 @@ let QuaatroEmLinha = {
 class QuatroEmLinha{
     alfa = -10;
     beta = 10;
+    nivelMaximoDFS = 2;
     estadoAtual = new Estado();
+
+    constructor(nivelMaximoDFS){
+        this.nivelMaximoDFS = nivelMaximoDFS;
+    }
+
 
     dfs(estado, nivelMax, nivel){
         //console.log(nivel);
         let retornoDFS, melhorJogada, indiceMelhorJogada;
 
-        if(estado.jogadaAtual === 64 || nivel === 13){
+        if(estado.jogadaAtual === 64 || nivel === this.nivelMaximoDFS){
             return;
         }
         let filhos = estado.geraFilhos();
