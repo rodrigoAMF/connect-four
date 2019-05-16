@@ -15,7 +15,12 @@
 <div class="container paginaJogo">
     <div class="row col-lg-10 offset-1">
       <div class="vezComputador col-lg-1">
-        <img src="img/computador.png">
+        <div class="fundoComputador">
+            <img src="img/computador.png">
+            <div class="imagensBola">
+                <img src="img/bolavermelha.png">
+            </div>
+        </div>
       </div>
       <div class="col-lg-8">
         <div class="container tabuleiro">
@@ -101,9 +106,14 @@
             </div>
         </div>
       </div>
-        <div class="vezPessoa col-lg-1">
-          <img src="img/pessoa1.png">
-        </div>
+         <div class="vezPessoa col-lg-1">
+            <div class="fundoPessoa">
+                <img src="img/pessoa1.png">
+                <div class="imagensBola">
+                    <img src="img/bolaazul.png">
+                </div>
+            </div> 
+      </div>
     </div>
 </div>
 
@@ -111,6 +121,9 @@
 <script src="js/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 
+<!-- Importação dos custom scripts -->
+<script src="js/Estado.js"></script>
+<script src="js/QuatroEmLinha.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>
