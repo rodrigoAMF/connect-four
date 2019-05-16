@@ -43,12 +43,11 @@ a:hover{
 
 .vezComputador{
 	margin-top: 80px;
-	//margin-left: 30px;
 }
 
 .vezPessoa{
 	margin-top: 80px;
-	margin-left: 50px;
+	margin-left: 60px;
 }
 
 .line-0{
@@ -77,4 +76,9 @@ a:hover{
 	border-radius: 10px;
 
 	float: left;
+}
+
+
+.paginaResultado{
+		background-image: url("../img/fundo.png");
 }
