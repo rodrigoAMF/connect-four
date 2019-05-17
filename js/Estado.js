@@ -21,7 +21,7 @@ class Estado{
     // Valor de minMax neste estado
     minMax = 0;
     // Melhor jogada para o estado atual
-    melhorJogada = [];
+    melhorJogada = -1;
     // Flag determina o fim do jogo (1 = fim de jogo, 0 = jogo não terminou)
     fimDeJogo = 0;
 
@@ -31,6 +31,34 @@ class Estado{
         this.posicaoJogada = [this.proximasJogadas[colunaProximaJogada], colunaProximaJogada];
         this.tabuleiro[this.proximasJogadas[colunaProximaJogada]][colunaProximaJogada] = this.jogadorAtual;
         this.proximasJogadas[colunaProximaJogada]--;
+    }
+
+    pintaPeca(colunaProximaJogada, jogadorAtual){
+        let idPosicao = "posicao" + this.proximasJogadas[colunaProximaJogada] + "-" + colunaProximaJogada;
+        if(jogadorAtual === -1){
+            document.getElementById(idPosicao).className = "jogadorJogou";
+            document.getElementsByClassName("fundoPessoa")[0].style["display"] = "none";
+            document.getElementsByClassName("fundoComputador")[0].style["display"] = "block";
+        }else{
+            document.getElementById(idPosicao).className = "iaJogou";
+            document.getElementsByClassName("fundoComputador")[0].style["display"] = "none";
+            document.getElementsByClassName("fundoPessoa")[0].style["display"] = "block";
+        }
+
+
+
+    }
+
+    efetuaJogada(colunaProximaJogada, jogadorAtual){
+
+        this.pintaPeca(colunaProximaJogada, jogadorAtual);
+        this.updateParametros(colunaProximaJogada);
+        this.updateMinMax();
+    }
+
+    efetuaJogadaSemPintarPeca(colunaProximaJogada){
+        this.updateParametros(colunaProximaJogada);
+        this.updateMinMax();
     }
 
     geraFilhos() {
@@ -47,8 +75,8 @@ class Estado{
                     estadoNovo.jogadorAtual = (this.jogadorAtual === -1) ? 1 : -1;
                 }
 
-                estadoNovo.updateParametros(i);
-                estadoNovo.updateMinMax();
+                estadoNovo.efetuaJogadaSemPintarPeca(i);
+
                 if(estadoNovo.minMax !== 0){
                     estadoNovo.fimDeJogo = 1;
                 }

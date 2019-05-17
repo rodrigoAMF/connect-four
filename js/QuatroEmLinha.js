@@ -1,18 +1,13 @@
-let QuaatroEmLinha = {
-    alfa: -10,
-    beta: 10
-}
-
 class QuatroEmLinha{
     alfa = -10;
     beta = 10;
     nivelMaximoDFS = 2;
     estadoAtual = new Estado();
+    jogadorAtual = -1;
 
     constructor(nivelMaximoDFS){
         this.nivelMaximoDFS = nivelMaximoDFS;
     }
-
 
     dfs(estado, nivelMax, nivel){
         //console.log(nivel);
@@ -66,7 +61,62 @@ class QuatroEmLinha{
             }
         }
         estado.minMax = melhorJogada;
-        //estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada;
+        estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada[1];
     }
 
+    efetuaJogadaIA(){
+        this.dfs(this.estadoAtual, true, 1);
+
+        this.estadoAtual.efetuaJogada(this.estadoAtual.melhorJogada, this.jogadorAtual);
+
+        this.jogadorAtual = -1;
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async efetuaJogadaJogador(posicaoJogada){
+        if(jogo.jogadorAtual === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
+            jogo.estadoAtual.efetuaJogada(posicaoJogada, jogo.jogadorAtual);
+
+            jogo.jogadorAtual = 1;
+
+            await jogo.sleep(1);
+
+            jogo.efetuaJogadaIA();
+        }
+    }
+
+    clickColuna0(){
+        jogo.efetuaJogadaJogador(0);
+    }
+
+    clickColuna1(){
+        jogo.efetuaJogadaJogador(1);
+    }
+
+    clickColuna2(){
+        jogo.efetuaJogadaJogador(2);
+    }
+
+    clickColuna3(){
+        jogo.efetuaJogadaJogador(3);
+    }
+
+    clickColuna4(){
+        jogo.efetuaJogadaJogador(4);
+    }
+
+    clickColuna5(){
+        jogo.efetuaJogadaJogador(5);
+    }
+
+    clickColuna6(){
+        jogo.efetuaJogadaJogador(6);
+    }
+
+    clickColuna7(){
+        jogo.efetuaJogadaJogador(7);
+    }
 }
