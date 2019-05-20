@@ -13,9 +13,7 @@ class Estado{
     // Locais onde é possível realizar a próxima jogada
     proximasJogadas = [7,7,7,7,7,7,7,7];
     // Jogada atual (jogadaInicial = 1, jogadaFinal = 64)
-    jogadaAtual = 1;
-    // Jogador que jogou neste estado (-1 = jogador1, 1=jogador2/IA)
-    jogadorAtual = null;
+    turnoAtual = 1;
     // Posição que jogador jogou neste estado
     posicaoJogada = [-1,-1];
     // Valor de minMax neste estado
@@ -26,16 +24,15 @@ class Estado{
     fimDeJogo = 0;
 
     // colunaProximaJogada = coluna do tabuleiro onde irá ser realizada a próxima jogada
-    //updateParametros(jogadorAtualPai, proximasJogadasPai, tabuleiroPai, colunaProximaJogada) {
     updateParametros(colunaProximaJogada) {
         this.posicaoJogada = [this.proximasJogadas[colunaProximaJogada], colunaProximaJogada];
-        this.tabuleiro[this.proximasJogadas[colunaProximaJogada]][colunaProximaJogada] = this.jogadorAtual;
+        this.tabuleiro[this.proximasJogadas[colunaProximaJogada]][colunaProximaJogada] = QuatroEmLinha.jogadorAtual;
         this.proximasJogadas[colunaProximaJogada]--;
     }
 
-    pintaPeca(colunaProximaJogada, jogadorAtual){
+    pintaPeca(colunaProximaJogada){
         let idPosicao = "posicao" + this.proximasJogadas[colunaProximaJogada] + "-" + colunaProximaJogada;
-        if(jogadorAtual === -1){
+        if(QuatroEmLinha.jogadorAtual === -1){
             document.getElementById(idPosicao).className = "jogadorJogou";
             document.getElementsByClassName("fundoPessoa")[0].style["display"] = "none";
             document.getElementsByClassName("fundoComputador")[0].style["display"] = "block";
@@ -49,9 +46,8 @@ class Estado{
 
     }
 
-    efetuaJogada(colunaProximaJogada, jogadorAtual){
-
-        this.pintaPeca(colunaProximaJogada, jogadorAtual);
+    efetuaJogada(colunaProximaJogada){
+        this.pintaPeca(colunaProximaJogada);
         this.updateParametros(colunaProximaJogada);
         this.updateMinMax();
     }
@@ -69,18 +65,13 @@ class Estado{
             if(this.proximasJogadas[i] >= 0)
             {
                 estadoNovo = this.clone();
-                if(this.jogadorAtual == null){
-                    estadoNovo.jogadorAtual = -1;
-                }else{
-                    estadoNovo.jogadorAtual = (this.jogadorAtual === -1) ? 1 : -1;
-                }
 
                 estadoNovo.efetuaJogadaSemPintarPeca(i);
 
                 if(estadoNovo.minMax !== 0){
                     estadoNovo.fimDeJogo = 1;
                 }
-                estadoNovo.jogadaAtual = this.jogadaAtual+1;
+                estadoNovo.turnoAtual = this.turnoAtual+1;
 
                 filhos.push(estadoNovo);
             }
@@ -94,46 +85,46 @@ class Estado{
         }
         this.minMax = this.verificaVencedor(this.posicaoJogada);
 
-        if (this.minMax !== this.jogadorAtual) {
+        if (this.minMax !== QuatroEmLinha.jogadorAtual) {
             let vizinhosValidos = [];
             // cima
             if (this.posicaoJogada[0] - 1 >= 0 &&
-                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1]] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1]] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0] - 1, this.posicaoJogada[1]]);
             }
             // baixo
             if (this.posicaoJogada[0] + 1 < 8 &&
-                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1]] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1]] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0] + 1, this.posicaoJogada[1]]);
             }
             // direita
             if (this.posicaoJogada[1] + 1 < 8 &&
-                this.tabuleiro[this.posicaoJogada[0]][this.posicaoJogada[1] + 1] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0]][this.posicaoJogada[1] + 1] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0], this.posicaoJogada[1] + 1]);
             }
             // esquerda
             if (this.posicaoJogada[1] - 1 >= 0 &&
-                this.tabuleiro[this.posicaoJogada[0]][this.posicaoJogada[1] - 1] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0]][this.posicaoJogada[1] - 1] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0], this.posicaoJogada[1] - 1]);
             }
             // diagonal superior direita
             if (this.posicaoJogada[0] - 1 >= 0 && this.posicaoJogada[1] + 1 < 8 &&
-                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1] + 1] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1] + 1] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0] - 1, this.posicaoJogada[1] + 1]);
             }
             // diagonal inferior direita
             if (this.posicaoJogada[0] + 1 < 8 && this.posicaoJogada[1] + 1 < 8 &&
-                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1] + 1] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1] + 1] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0] + 1, this.posicaoJogada[1] + 1]);
             }
             // diagonal inferior esquerda
             if (this.posicaoJogada[0] + 1 < 8 && this.posicaoJogada[1] - 1 >= 0 &&
-                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1] - 1] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0] + 1][this.posicaoJogada[1] - 1] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0] + 1, this.posicaoJogada[1] - 1]);
             }
             // diagonal superior esquerda
             if (this.posicaoJogada[0] - 1 >= 0 && this.posicaoJogada[1] - 1 >= 0 &&
-                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1] - 1] === this.jogadorAtual) {
+                this.tabuleiro[this.posicaoJogada[0] - 1][this.posicaoJogada[1] - 1] === QuatroEmLinha.jogadorAtual) {
                 vizinhosValidos.push([this.posicaoJogada[0] - 1, this.posicaoJogada[1] - 1]);
             }
 
@@ -141,7 +132,7 @@ class Estado{
             for (let i = 0; i < vizinhosValidos.length; i++) {
 
                 this.minMax = this.verificaVencedor(vizinhosValidos[i]);
-                if (this.minMax === this.jogadorAtual)
+                if (this.minMax === QuatroEmLinha.jogadorAtual)
                     return;
             }
         }
@@ -155,12 +146,12 @@ class Estado{
 
             for(let i = posicao[1]+1; i <= posicaoFinal[1]; i++){
 
-                if(this.tabuleiro[posicao[0]][i] === this.jogadorAtual){
+                if(this.tabuleiro[posicao[0]][i] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela esquerda
@@ -170,12 +161,12 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[1]-1; i >= posicaoFinal[1]; i--){
-                if(this.tabuleiro[posicao[0]][i] === this.jogadorAtual){
+                if(this.tabuleiro[posicao[0]][i] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
 
@@ -186,12 +177,12 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1; i >= posicaoFinal[0]; i--){
-                if(this.tabuleiro[i][posicao[1]] === this.jogadorAtual){
+                if(this.tabuleiro[i][posicao[1]] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
 
@@ -200,18 +191,18 @@ class Estado{
             let posicaoFinal = [posicao[0]+3, posicao[1]];
             let contadorPecas = 1;
 
-            if(this.jogadaAtual === 4){
+            if(this.turnoAtual === 4){
                 console.log(posicaoFinal);
                 console.log(posicao);
             }
 
             for(let i = posicao[0]+1; i <= posicaoFinal[0]; i++){
-                if(this.tabuleiro[i][posicao[1]] === this.jogadorAtual){
+                if(this.tabuleiro[i][posicao[1]] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
 
@@ -221,12 +212,12 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1, j = posicao[1]+1; i >= posicaoFinal[0] && j <= posicaoFinal[1]; i--, j++){
-                if(this.tabuleiro[i][j] === this.jogadorAtual){
+                if(this.tabuleiro[i][j] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal inferior direita
@@ -235,12 +226,12 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1, j = posicao[1]+1; i <= posicaoFinal[0] && j <= posicaoFinal[1]; i++, j++){
-                if(this.tabuleiro[i][j] === this.jogadorAtual){
+                if(this.tabuleiro[i][j] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal inferior esquerda
@@ -249,12 +240,12 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1, j = posicao[1]-1; i <= posicaoFinal[0] && j >= posicaoFinal[1]; i++, j--){
-                if(this.tabuleiro[i][j] === this.jogadorAtual){
+                if(this.tabuleiro[i][j] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal superior esquerda
@@ -263,12 +254,12 @@ class Estado{
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1, j = posicao[1]-1; i >= posicaoFinal[0] && j >= posicaoFinal[1]; i--, j--){
-                if(this.tabuleiro[i][j] === this.jogadorAtual){
+                if(this.tabuleiro[i][j] === QuatroEmLinha.jogadorAtual){
                     contadorPecas++;
                 }
             }
             if(contadorPecas === 4){
-                return this.jogadorAtual;
+                return QuatroEmLinha.jogadorAtual;
             }
         }
 
@@ -280,13 +271,12 @@ class Estado{
         console.log(this.tabuleiro);
         console.log(this.proximasJogadas);
         console.log(this.posicaoJogada);
-        console.log("Jogador Atual " + this.jogadorAtual);
+        console.log("Jogador Atual " + QuatroEmLinha.jogadorAtual);
         console.log("MinMax " + this.minMax);
     }
 
     clone(){
         let novo = new Estado();
-        novo.jogadorAtual = this.jogadorAtual;
         novo.minMax = this.minMax;
 
         for(let i = 0; i < 8; i++){

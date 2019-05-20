@@ -1,19 +1,30 @@
 class QuatroEmLinha{
-    alfa = -10;
-    beta = 10;
-    nivelMaximoDFS = 2;
-    estadoAtual = new Estado();
-    jogadorAtual = -1;
+    alfa;
+    beta;
+    nivelMaximoDFS;
+    estadoAtual;
+    // Jogador que jogou neste estado (-1 = jogador1, 1=jogador2/IA)
+    static jogadorAtual;
+    static instance = null;
 
-    constructor(nivelMaximoDFS){
-        this.nivelMaximoDFS = nivelMaximoDFS;
+    constructor(){
+        this.estadoAtual = new Estado();
+        this.alfa = -10;
+        this.beta = 10;
+        QuatroEmLinha.jogadorAtual = -1;
+    }
+
+    static getInstance(){
+        if(this.instance == null){
+            this.instance = new QuatroEmLinha();
+        }
+        return this.instance;
     }
 
     dfs(estado, nivelMax, nivel){
-        //console.log(nivel);
         let retornoDFS, melhorJogada, indiceMelhorJogada;
 
-        if(estado.jogadaAtual === 64 || nivel === this.nivelMaximoDFS){
+        if(estado.turnoAtual === 64 || nivel === this.nivelMaximoDFS){
             return;
         }
         let filhos = estado.geraFilhos();
@@ -67,9 +78,11 @@ class QuatroEmLinha{
     efetuaJogadaIA(){
         this.dfs(this.estadoAtual, true, 1);
 
-        this.estadoAtual.efetuaJogada(this.estadoAtual.melhorJogada, this.jogadorAtual);
+        this.estadoAtual.efetuaJogada(this.estadoAtual.melhorJogada);
 
-        this.jogadorAtual = -1;
+        console.log(this.estadoAtual.minMax);
+
+        QuatroEmLinha.jogadorAtual = -1;
     }
 
     sleep(ms) {
@@ -77,10 +90,10 @@ class QuatroEmLinha{
     }
 
     async efetuaJogadaJogador(posicaoJogada){
-        if(jogo.jogadorAtual === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
-            jogo.estadoAtual.efetuaJogada(posicaoJogada, jogo.jogadorAtual);
+        if(QuatroEmLinha.jogadorAtual === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
+            jogo.estadoAtual.efetuaJogada(posicaoJogada);
 
-            jogo.jogadorAtual = 1;
+            QuatroEmLinha.jogadorAtual = 1;
 
             await jogo.sleep(1);
 
