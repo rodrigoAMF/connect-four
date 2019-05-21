@@ -13,7 +13,7 @@ class QuatroEmLinha{
         //console.log(nivel);
         let retornoDFS, melhorJogada, indiceMelhorJogada;
 
-        if(estado.jogadaAtual === 64 || nivel === this.nivelMaximoDFS){
+        if(estado.jogadaAtual === 64 || nivel === this.nivelMaximoDFS || estado.fimDeJogo){
             return;
         }
         let filhos = estado.geraFilhos();
@@ -69,6 +69,14 @@ class QuatroEmLinha{
 
         this.estadoAtual.efetuaJogada(this.estadoAtual.melhorJogada, this.jogadorAtual);
 
+        console.log("IA: ");
+        console.log(this.estadoAtual);
+
+        if(jogo.estadoAtual.fimDeJogo){
+            alert("IA Venceu!");
+            return;
+        }
+
         this.jogadorAtual = -1;
     }
 
@@ -79,6 +87,15 @@ class QuatroEmLinha{
     async efetuaJogadaJogador(posicaoJogada){
         if(jogo.jogadorAtual === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
             jogo.estadoAtual.efetuaJogada(posicaoJogada, jogo.jogadorAtual);
+
+            console.log("Jogador: ");
+            console.log(this.estadoAtual);
+
+            if(jogo.estadoAtual.fimDeJogo){
+                alert("Jogador Venceu!");
+                return;
+            }
+
 
             jogo.jogadorAtual = 1;
 
