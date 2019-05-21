@@ -1,6 +1,6 @@
-let jogo = new QuatroEmLinha(13);
-
-jogo.estadoAtual = new Estado();
+let jogo = QuatroEmLinha.getInstance();
+jogo.nivelMaximoDFS = 10;
+console.log(jogo.estadoAtual);
 
 let divName;
 for(let i=0; i < 8; i++) {
