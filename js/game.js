@@ -1,6 +1,15 @@
-let jogo = QuatroEmLinha.getInstance();
+let inicial = new Estado(1, null, true);
+inicial.inicioDeJogo = false;
+inicial.tabuleiro[0][0] = -1;
+inicial.tabuleiro[0][1] = -1;
+inicial.tabuleiro[0][2] = -1;
+inicial.tabuleiro[0][3] = -1;
+console.log(inicial.verificarVencedor());
+inicial.atualizarMinMax();
+console.log(inicial);
+
+/*let jogo = QuatroEmLinha.getInstance();
 jogo.nivelMaximoDFS = 10;
-console.log(jogo.estadoAtual);
 
 let divName;
 for(let i=0; i < 8; i++) {
@@ -26,7 +35,7 @@ for(let i=0; i < 8; i++) {
 
     }
 }
-
+*/
 
 
 /*let start = performance.now();

@@ -6,12 +6,14 @@ class QuatroEmLinha{
     // Jogador que jogou neste estado (-1 = jogador1, 1=jogador2/IA)
     static jogadorAtual;
     static instance = null;
+    // 'ia', 'jogador'
+    static jogadorInicial;
 
     constructor(){
         this.estadoAtual = new Estado();
+        QuatroEmLinha.jogadorInicial = 'jogador';
         this.alfa = -10;
         this.beta = 10;
-        QuatroEmLinha.jogadorAtual = -1;
     }
 
     static getInstance(){
@@ -24,7 +26,7 @@ class QuatroEmLinha{
     dfs(estado, nivelMax, nivel){
         let retornoDFS, melhorJogada, indiceMelhorJogada;
 
-        if(estado.jogadaAtual === 64 || nivel === this.nivelMaximoDFS || estado.fimDeJogo){
+        if(estado.getJogadorAtual() === 64 || nivel === this.nivelMaximoDFS || estado.fimDeJogo){
             return;
         }
         let filhos = estado.geraFilhos();
@@ -56,6 +58,7 @@ class QuatroEmLinha{
             melhorJogada = 10;
 
             for (let i = 0; i < filhos.length; i++) {
+                if(filhos[i].min)
                 this.dfs(filhos[i], true,nivel + 1);
                 retornoDFS = filhos[i].minMax;
 
@@ -75,20 +78,18 @@ class QuatroEmLinha{
         estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada[1];
     }
 
-    efetuaJogadaIA(){
-        this.dfs(this.estadoAtual, true, 1);
+    async efetuaJogadaIA(){
+        jogo.dfs(jogo.estadoAtual, true, 1);
 
-        this.estadoAtual.efetuaJogada(this.estadoAtual.melhorJogada);
+        jogo.estadoAtual.efetuaJogada(jogo.estadoAtual.melhorJogada, jogo.estadoAtual.getJogadorAtual());
 
-        console.log("IA: ");
-        console.log(this.estadoAtual);
-
-        if(jogo.estadoAtual.fimDeJogo){
+        await jogo.sleep(1);
+        /*if(jogo.estadoAtual.fimDeJogo){
             alert("IA Venceu!");
             return;
-        }
+        }*/
 
-        this.jogadorAtual = -1;
+        QuatroEmLinha.jogadorAtual = -1;
     }
 
     sleep(ms) {
@@ -96,21 +97,16 @@ class QuatroEmLinha{
     }
 
     async efetuaJogadaJogador(posicaoJogada){
-        if(QuatroEmLinha.jogadorAtual === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
-            jogo.estadoAtual.efetuaJogada(posicaoJogada);
+        if(jogo.estadoAtual.getJogadorAtual() === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
+            jogo.estadoAtual.efetuaJogada(posicaoJogada, jogo.estadoAtual.getJogadorAtual());
 
-            console.log("Jogador: ");
-            console.log(this.estadoAtual);
-
-            if(jogo.estadoAtual.fimDeJogo){
-                alert("Jogador Venceu!");
-                return;
-            }
-
-
-            jogo.jogadorAtual = 1;
+            QuatroEmLinha.jogadorAtual = 1;
 
             await jogo.sleep(1);
+            /*if(jogo.estadoAtual.fimDeJogo) {
+                alert("Jogador Venceu!");
+                return;
+            }*/
 
             jogo.efetuaJogadaIA();
         }
