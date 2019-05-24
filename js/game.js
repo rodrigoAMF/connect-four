@@ -1,41 +1,25 @@
-let inicial = new Estado(1, null, true);
-inicial.inicioDeJogo = false;
-inicial.tabuleiro[4][4] = -1;
-inicial.tabuleiro[4][5] = -1;
-inicial.tabuleiro[4][6] = -1;
-inicial.tabuleiro[4][1] = -1;
-console.log(inicial.verificarVencedor());
-inicial.atualizarMinMax();
-console.log(inicial);
+let jogo = QuatroEmLinha.getInstance();
 
-/*let jogo = QuatroEmLinha.getInstance();
-jogo.nivelMaximoDFS = 10;
+//jogo.estadoAtual = jogo.estadoAtual.gerarFilhos()[3].gerarFilhos()[0].gerarFilhos()[3].gerarFilhos()[1].gerarFilhos()[3].gerarFilhos()[2];
+
+//jogo.estadoAtual = jogo.estadoAtual.gerarFilhos()[4].gerarFilhos()[0].gerarFilhos()[4].gerarFilhos()[1].gerarFilhos()[0];
+
+//jogo.buscarMelhorColunaParaJogar();
+
+//console.log(jogo.estadoAtual);
+
+
 
 let divName;
 for(let i=0; i < 8; i++) {
     for (let j=0; j < 8; j++) {
         divName = "posicao" + i + "-" + j;
-        if (j === 0) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna0);
-        } else if (j === 1) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna1);
-        } else if (j === 2) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna2);
-        } else if (j === 3) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna3);
-        } else if (j === 4) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna4);
-        } else if (j === 5) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna5);
-        } else if (j === 6) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna6);
-        } else if (j === 7) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna7);
-        }
-
+        document.getElementById(divName).addEventListener("click", () => {
+            jogo.efetuarJogadaJogador(j);
+        });
     }
 }
-*/
+
 
 
 /*let start = performance.now();

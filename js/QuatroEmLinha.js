@@ -1,19 +1,13 @@
 class QuatroEmLinha{
-    alfa;
-    beta;
-    nivelMaximoDFS;
-    estadoAtual;
-    // Jogador que jogou neste estado (-1 = jogador1, 1=jogador2/IA)
-    static jogadorAtual;
     static instance = null;
-    // 'ia', 'jogador'
-    static jogadorInicial;
 
     constructor(){
-        this.estadoAtual = new Estado();
-        QuatroEmLinha.jogadorInicial = 'jogador';
+        this.estadoAtual = new Estado(0, null, true);
         this.alfa = -10;
         this.beta = 10;
+        // Quantos níveis a partir do atual o MiniMax irá considerar
+        // para buscar a melhor coluna para se jogar
+        this.pronfundidadeBusca = 4;
     }
 
     static getInstance(){
@@ -22,125 +16,113 @@ class QuatroEmLinha{
         }
         return this.instance;
     }
+    // Chamar sempre em um estado com jogadorAtual = -1
+    buscarMelhorColunaParaJogar(){
+        if(this.estadoAtual.jogadorAtual === -1)
+            this.miniMax(this.estadoAtual, this.estadoAtual.turnoAtual+this.pronfundidadeBusca, true);
+        else
+            throw "Erro: a busca pela melhor jogada só pode se efetuada após o Jogador jogar";
+    }
 
-    dfs(estado, nivelMax, nivel){
-        let retornoDFS, melhorJogada, indiceMelhorJogada;
+    // MiniMax com poda alfa e beta (DFS Limitada)
+    miniMax(estadoAtual, turnoFinalBusca, ehNivelMax){
+        let melhorMinMax, minMaxEncontradoNaBusca, melhorColunaParaJogar;
 
-        if(estado.getJogadorAtual() === 64 || nivel === this.nivelMaximoDFS || estado.fimDeJogo){
+        //console.log(estadoAtual.minMax);
+
+        if(estadoAtual.fimDeJogo || estadoAtual.turnoAtual === 64 || estadoAtual.turnoAtual === turnoFinalBusca){
+            estadoAtual.minMax = (estadoAtual.minMax == null) ? 0 : estadoAtual.minMax;
             return;
         }
-        let filhos = estado.geraFilhos();
 
-        if(nivelMax){
-            // MAX
-            melhorJogada = -10;
+        let filhos = estadoAtual.gerarFilhos();
+
+        //console.log(filhos);
+
+        if(ehNivelMax){
+            // Estado MAX (Procura minimizar o MinMax)
+            melhorMinMax = -10;
 
             for (let i = 0; i < filhos.length; i++) {
-                if(filhos[i].fimDeJogo !== 1){
-                    this.dfs(filhos[i], false,nivel + 1);
-                    retornoDFS = filhos[i].minMax;
+                this.miniMax(filhos[i], turnoFinalBusca,false);
+                minMaxEncontradoNaBusca = filhos[i].minMax;
 
-                    if (retornoDFS > melhorJogada) {
-                        melhorJogada = retornoDFS;
-                        indiceMelhorJogada = i;
-                    }
-                    if (melhorJogada > this.alfa) {
-                        this.alfa = melhorJogada;
-                    }
-                    if (melhorJogada >= this.beta) {
-                        break;
-                    }
+                if (minMaxEncontradoNaBusca > melhorMinMax) {
+                    melhorMinMax = minMaxEncontradoNaBusca;
+                    melhorColunaParaJogar = filhos[i].posicaoJogada[1];
                 }
-
+                if (melhorMinMax > this.alfa) {
+                    this.alfa = melhorMinMax;
+                }
+                /*if (melhorMinMax >= this.beta) {
+                    break;
+                }*/
             }
         }else{
-            // MIN
-            melhorJogada = 10;
+            // Estado MIN (Procura manimizar o MinMax)
+            melhorMinMax = 10;
 
             for (let i = 0; i < filhos.length; i++) {
-                if(filhos[i].min)
-                this.dfs(filhos[i], true,nivel + 1);
-                retornoDFS = filhos[i].minMax;
+                this.miniMax(filhos[i], turnoFinalBusca,true);
+                minMaxEncontradoNaBusca = filhos[i].minMax;
 
-                if (retornoDFS < melhorJogada) {
-                    melhorJogada = retornoDFS;
-                    indiceMelhorJogada = i;
+                if (minMaxEncontradoNaBusca < melhorMinMax) {
+                    melhorMinMax = minMaxEncontradoNaBusca;
+                    melhorColunaParaJogar = filhos[i].posicaoJogada[1];
                 }
-                if (melhorJogada > this.beta) {
-                    this.beta = melhorJogada;
+                if (melhorMinMax > this.beta) {
+                    this.beta = melhorMinMax;
                 }
-                if (melhorJogada <= this.alfa) {
+                /*if (melhorMinMax <= this.alfa) {
                     break;
-                }
+                }*/
             }
         }
-        estado.minMax = melhorJogada;
-        estado.melhorJogada = filhos[indiceMelhorJogada].posicaoJogada[1];
+        estadoAtual.minMax = melhorMinMax;
+        estadoAtual.melhorColunaParaJogar = melhorColunaParaJogar;
     }
 
-    async efetuaJogadaIA(){
-        jogo.dfs(jogo.estadoAtual, true, 1);
+    efetuarJogadaIA(){
+        this.buscarMelhorColunaParaJogar();
 
-        jogo.estadoAtual.efetuaJogada(jogo.estadoAtual.melhorJogada, jogo.estadoAtual.getJogadorAtual());
+        let posicaoJogada = [this.estadoAtual.proximasJogadas[this.estadoAtual.melhorColunaParaJogar],
+                    this.estadoAtual.melhorColunaParaJogar];
 
-        await jogo.sleep(1);
-        /*if(jogo.estadoAtual.fimDeJogo){
-            alert("IA Venceu!");
-            return;
-        }*/
+        this.pintaPecaDoTabuleiro(posicaoJogada);
+        this.estadoAtual = this.estadoAtual.efetuarJogada(this.estadoAtual.turnoAtual+1, posicaoJogada);
 
-        QuatroEmLinha.jogadorAtual = -1;
-    }
-
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async efetuaJogadaJogador(posicaoJogada){
-        if(jogo.estadoAtual.getJogadorAtual() === -1 && jogo.estadoAtual.tabuleiro[jogo.estadoAtual.proximasJogadas[posicaoJogada]][posicaoJogada] === 0){
-            jogo.estadoAtual.efetuaJogada(posicaoJogada, jogo.estadoAtual.getJogadorAtual());
-
-            QuatroEmLinha.jogadorAtual = 1;
-
-            await jogo.sleep(1);
-            /*if(jogo.estadoAtual.fimDeJogo) {
-                alert("Jogador Venceu!");
-                return;
-            }*/
-
-            jogo.efetuaJogadaIA();
+        if(this.estadoAtual.fimDeJogo){
+            alert("Fim de jogo: IA Venceu!");
+            this.estadoAtual.jogadorAtual = -3;
         }
     }
 
-    clickColuna0(){
-        jogo.efetuaJogadaJogador(0);
+    efetuarJogadaJogador(colunaJogada){
+        if(this.estadoAtual.jogadorAtual === 1 || this.estadoAtual.inicioDeJogo){
+            let posicaoJogada = [this.estadoAtual.proximasJogadas[colunaJogada], colunaJogada];
+
+            this.pintaPecaDoTabuleiro(posicaoJogada);
+            this.estadoAtual = this.estadoAtual.efetuarJogada(this.estadoAtual.turnoAtual+1, posicaoJogada);
+
+            if(this.estadoAtual.fimDeJogo){
+                alert("Fim de jogo: Jogador Venceu!");
+                this.estadoAtual.jogadorAtual = -3;
+            }
+
+            this.efetuarJogadaIA();
+        }
     }
 
-    clickColuna1(){
-        jogo.efetuaJogadaJogador(1);
-    }
-
-    clickColuna2(){
-        jogo.efetuaJogadaJogador(2);
-    }
-
-    clickColuna3(){
-        jogo.efetuaJogadaJogador(3);
-    }
-
-    clickColuna4(){
-        jogo.efetuaJogadaJogador(4);
-    }
-
-    clickColuna5(){
-        jogo.efetuaJogadaJogador(5);
-    }
-
-    clickColuna6(){
-        jogo.efetuaJogadaJogador(6);
-    }
-
-    clickColuna7(){
-        jogo.efetuaJogadaJogador(7);
+    pintaPecaDoTabuleiro(posicaoJogada){
+        let idPosicao = "posicao" + posicaoJogada[0] + "-" + posicaoJogada[1];
+        if(this.estadoAtual.jogadorAtual === -1){
+            document.getElementById(idPosicao).className = "jogadorJogou";
+            document.getElementsByClassName("fundoPessoa")[0].style["display"] = "none";
+            document.getElementsByClassName("fundoComputador")[0].style["display"] = "block";
+        }else{
+            document.getElementById(idPosicao).className = "iaJogou";
+            document.getElementsByClassName("fundoComputador")[0].style["display"] = "none";
+            document.getElementsByClassName("fundoPessoa")[0].style["display"] = "block";
+        }
     }
 }

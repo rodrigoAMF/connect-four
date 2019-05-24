@@ -17,21 +17,50 @@ class Estado{
         // Locais onde é possível realizar a próxima jogada
         this.proximasJogadas = [7,7,7,7,7,7,7,7];
         this.turnoAtual = turnoAtual;
-        this.inicioDeJogo = true;
+        this.inicioDeJogo = inicioJogo;
         // Posição que jogador jogou neste estado
         this.posicaoJogada = posicaoJogada;
+        // Jogador responsável pela jogadaAtual
         this.jogadorAtual = this.atualizarJogadorAtual();
         // Valor de minMax neste estado
         this.minMax = null;
         // Melhor jogada para o estado atual
         this.melhorColunaParaJogar = null;
-        this.fimDeJogo = null;
+        this.fimDeJogo = false;
     }
 
+    gerarFilhos(){
+        let filhos = [];
+        let estadoNovo, posicaoJogada;
 
+        for(let i = 0; i < 8; i++){
+            if(this.proximasJogadas[i] >= 0){
+                posicaoJogada = [this.proximasJogadas[i], i];
+                estadoNovo = this.efetuarJogada(this.turnoAtual+1, posicaoJogada);
+
+                filhos.push(estadoNovo);
+            }
+        }
+
+        return filhos;
+    }
+
+    efetuarJogada(turnoAtual, posicaoJogada){
+        let estadoNovo = this.clonar(this.turnoAtual+1, posicaoJogada);
+
+        estadoNovo.tabuleiro[posicaoJogada[0]][posicaoJogada[1]] = estadoNovo.jogadorAtual;
+        estadoNovo.proximasJogadas[posicaoJogada[1]]--;
+        estadoNovo.inicioDeJogo = false;
+        estadoNovo.atualizarMinMax();
+
+        return estadoNovo;
+    }
 
     // -1 jogador, 1 ia
     atualizarJogadorAtual(){
+        if(this.inicioDeJogo) {
+            return null;
+        }
         if ((this.turnoAtual % 2) === 0) {
             return 1;
         }
@@ -44,7 +73,7 @@ class Estado{
             this.minMax = vencedor;
         }
     }
-
+    // verificaVencedor e seta fimDejJogo
     verificarVencedor(){
         if(this.inicioDeJogo){
             return 0;
@@ -195,7 +224,6 @@ class Estado{
                 novo.tabuleiro[i][j] = this.tabuleiro[i][j];
             }
         }
-        novo.inicioDeJogo = this.inicioDeJogo;
         novo.minMax = this.minMax;
         novo.melhorColunaParaJogar = this.melhorColunaParaJogar;
         novo.fimDeJogo = this.fimDeJogo;
