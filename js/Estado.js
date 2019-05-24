@@ -28,6 +28,16 @@ class Estado{
         this.fimDeJogo = null;
     }
 
+
+
+    // -1 jogador, 1 ia
+    atualizarJogadorAtual(){
+        if ((this.turnoAtual % 2) === 0) {
+            return 1;
+        }
+        return -1;
+    }
+
     atualizarMinMax(){
         let vencedor = this.verificarVencedor();
         if(vencedor !== 0){
@@ -42,11 +52,14 @@ class Estado{
         let vencedor = 0;
         for(let i = 0; i < 8; i++){
             for(let j = 0; j < 8; j++){
-                vencedor = this.verificarVencedorEmPosicaoEspecifica([i, j]);
-                if(vencedor !== 0){
-                    this.fimDeJogo = true;
-                    return vencedor;
+                if(this.tabuleiro[i][j] === this.jogadorAtual){
+                    vencedor = this.verificarVencedorEmPosicaoEspecifica([i, j]);
+                    if(vencedor !== 0){
+                        this.fimDeJogo = true;
+                        return vencedor;
+                    }
                 }
+
             }
         }
 
@@ -172,20 +185,6 @@ class Estado{
             }
         }
         return 0;
-    }
-    // -1 jogador, 1 ia
-    atualizarJogadorAtual(){
-        //if(QuatroEmLinha.jogadorInicial === 'jogador') {
-            if ((this.turnoAtual % 2) === 0) {
-                return 1;
-            }
-            return -1;
-        /*}else {
-            if ((this.turnoAtual % 2) === 0) {
-                return -1;
-            }
-            return 1;
-        }*/
     }
 
     clonar(turnoAtual, posicaoJogada){

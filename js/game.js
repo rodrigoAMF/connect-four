@@ -1,9 +1,9 @@
 let inicial = new Estado(1, null, true);
 inicial.inicioDeJogo = false;
-inicial.tabuleiro[0][0] = -1;
-inicial.tabuleiro[0][1] = -1;
-inicial.tabuleiro[0][2] = -1;
-inicial.tabuleiro[0][3] = -1;
+inicial.tabuleiro[4][4] = -1;
+inicial.tabuleiro[4][5] = -1;
+inicial.tabuleiro[4][6] = -1;
+inicial.tabuleiro[4][1] = -1;
 console.log(inicial.verificarVencedor());
 inicial.atualizarMinMax();
 console.log(inicial);
