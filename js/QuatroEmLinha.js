@@ -7,7 +7,7 @@ class QuatroEmLinha{
         this.beta = 10;
         // Quantos níveis a partir do atual o MiniMax irá considerar
         // para buscar a melhor coluna para se jogar
-        this.pronfundidadeBusca = 4;
+        this.pronfundidadeBusca = 8;
     }
 
     static getInstance(){
@@ -30,13 +30,14 @@ class QuatroEmLinha{
 
         //console.log(estadoAtual.minMax);
 
-        if(estadoAtual.fimDeJogo || estadoAtual.turnoAtual === 64 || estadoAtual.turnoAtual === turnoFinalBusca){
+        if(estadoAtual.fimDeJogo ||
+            estadoAtual.turnoAtual === (this.estadoAtual.tamanhoTabuleiro*this.estadoAtual.tamanhoTabuleiro) ||
+            estadoAtual.turnoAtual === turnoFinalBusca){
             estadoAtual.minMax = (estadoAtual.minMax == null) ? 0 : estadoAtual.minMax;
             return;
         }
 
         let filhos = estadoAtual.gerarFilhos();
-
         //console.log(filhos);
 
         if(ehNivelMax){

@@ -5,17 +5,21 @@ class Estado{
         }
 
         this.tabuleiro = [
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0]
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
+            [0,0,0,0,0,0],
         ];
+        this.pecasIguaisParaVencer = 3;
+        this.tamanhoTabuleiro = 6;
+
         // Locais onde é possível realizar a próxima jogada
-        this.proximasJogadas = [7,7,7,7,7,7,7,7];
+        this.proximasJogadas = [];
+        for(let i = 0; i < this.tamanhoTabuleiro; i++){
+            this.proximasJogadas[i] = this.tamanhoTabuleiro-1;
+        }
         this.turnoAtual = turnoAtual;
         this.inicioDeJogo = inicioJogo;
         // Posição que jogador jogou neste estado
@@ -33,7 +37,7 @@ class Estado{
         let filhos = [];
         let estadoNovo, posicaoJogada;
 
-        for(let i = 0; i < 8; i++){
+        for(let i = 0; i < this.tamanhoTabuleiro; i++){
             if(this.proximasJogadas[i] >= 0){
                 posicaoJogada = [this.proximasJogadas[i], i];
                 estadoNovo = this.efetuarJogada(this.turnoAtual+1, posicaoJogada);
@@ -79,8 +83,8 @@ class Estado{
             return 0;
         }
         let vencedor = 0;
-        for(let i = 0; i < 8; i++){
-            for(let j = 0; j < 8; j++){
+        for(let i = 0; i < this.tamanhoTabuleiro; i++){
+            for(let j = 0; j < this.tamanhoTabuleiro; j++){
                 if(this.tabuleiro[i][j] === this.jogadorAtual){
                     vencedor = this.verificarVencedorEmPosicaoEspecifica([i, j]);
                     if(vencedor !== 0){
@@ -97,8 +101,8 @@ class Estado{
 
     verificarVencedorEmPosicaoEspecifica(posicao){
         // verifica se é possível ganhar pela direita
-        if(posicao[1]+3 < 8) {
-            let posicaoFinal = [posicao[0], posicao[1]+3];
+        if(posicao[1]+(this.pecasIguaisParaVencer-1) < this.tamanhoTabuleiro) {
+            let posicaoFinal = [posicao[0], posicao[1]+(this.pecasIguaisParaVencer-1)];
             let contadorPecas = 1;
 
             for(let i = posicao[1]+1; i <= posicaoFinal[1]; i++){
@@ -107,13 +111,13 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === this.pecasIguaisParaVencer){
                 return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela esquerda
-        if(posicao[1]-3 >= 0) {
-            let posicaoFinal = [posicao[0], posicao[1]-3];
+        if(posicao[1]-(this.pecasIguaisParaVencer-1) >= 0) {
+            let posicaoFinal = [posicao[0], posicao[1]-(this.pecasIguaisParaVencer-1)];
             let contadorPecas = 1;
 
             for(let i = posicao[1]-1; i >= posicaoFinal[1]; i--){
@@ -121,15 +125,15 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
 
         // verifica se é possível ganhar por cima
-        if(posicao[0]-3 >= 0) {
+        if(posicao[0]-(this.pecasIguaisParaVencer-1) >= 0) {
 
-            let posicaoFinal = [posicao[0]-3, posicao[1]];
+            let posicaoFinal = [posicao[0]-(this.pecasIguaisParaVencer-1), posicao[1]];
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1; i >= posicaoFinal[0]; i--){
@@ -137,14 +141,14 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
 
         // verifica se é possível ganhar por baixo
-        if(posicao[0]+3 < 8) {
-            let posicaoFinal = [posicao[0]+3, posicao[1]];
+        if(posicao[0]+(this.pecasIguaisParaVencer-1) < this.tamanhoTabuleiro) {
+            let posicaoFinal = [posicao[0]+(this.pecasIguaisParaVencer-1), posicao[1]];
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1; i <= posicaoFinal[0]; i++){
@@ -152,14 +156,14 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
 
         // verifica se é possível ganhar pela diagonal superior direita
-        if(posicao[0]-3 >= 0 && posicao[1]+3 < 8) {
-            let posicaoFinal = [posicao[0]-3, posicao[1]+3];
+        if(posicao[0]-(this.pecasIguaisParaVencer-1) >= 0 && posicao[1]+(this.pecasIguaisParaVencer-1) < this.tamanhoTabuleiro) {
+            let posicaoFinal = [posicao[0]-(this.pecasIguaisParaVencer-1), posicao[1]+(this.pecasIguaisParaVencer-1)];
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1, j = posicao[1]+1; i >= posicaoFinal[0] && j <= posicaoFinal[1]; i--, j++){
@@ -167,13 +171,13 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal inferior direita
-        if(posicao[0]+3 < 8 && posicao[1]+3 < 8) {
-            let posicaoFinal = [posicao[0]+3, posicao[1]+3];
+        if(posicao[0]+(this.pecasIguaisParaVencer-1) < this.tamanhoTabuleiro && posicao[1]+(this.pecasIguaisParaVencer-1) < this.tamanhoTabuleiro) {
+            let posicaoFinal = [posicao[0]+(this.pecasIguaisParaVencer-1), posicao[1]+(this.pecasIguaisParaVencer-1)];
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1, j = posicao[1]+1; i <= posicaoFinal[0] && j <= posicaoFinal[1]; i++, j++){
@@ -181,13 +185,13 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal inferior esquerda
-        if(posicao[0]+3 < 8 && posicao[1]-3 >= 0) {
-            let posicaoFinal = [posicao[0]+3, posicao[1]-3];
+        if(posicao[0]+(this.pecasIguaisParaVencer-1) < this.tamanhoTabuleiro && posicao[1]-(this.pecasIguaisParaVencer-1) >= 0) {
+            let posicaoFinal = [posicao[0]+(this.pecasIguaisParaVencer-1), posicao[1]-(this.pecasIguaisParaVencer-1)];
             let contadorPecas = 1;
 
             for(let i = posicao[0]+1, j = posicao[1]-1; i <= posicaoFinal[0] && j >= posicaoFinal[1]; i++, j--){
@@ -195,13 +199,13 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
         // verifica se é possível ganhar pela diagonal superior esquerda
-        if(posicao[0]-3 >= 0 && posicao[1]-3 >= 0) {
-            let posicaoFinal = [posicao[0]-3, posicao[1]-3];
+        if(posicao[0]-(this.pecasIguaisParaVencer-1) >= 0 && posicao[1]-(this.pecasIguaisParaVencer-1) >= 0) {
+            let posicaoFinal = [posicao[0]-(this.pecasIguaisParaVencer-1), posicao[1]-(this.pecasIguaisParaVencer-1)];
             let contadorPecas = 1;
 
             for(let i = posicao[0]-1, j = posicao[1]-1; i >= posicaoFinal[0] && j >= posicaoFinal[1]; i--, j--){
@@ -209,7 +213,7 @@ class Estado{
                     contadorPecas++;
                 }
             }
-            if(contadorPecas === 4){
+            if(contadorPecas === (this.pecasIguaisParaVencer)){
                 return this.jogadorAtual;
             }
         }
@@ -218,9 +222,9 @@ class Estado{
 
     clonar(turnoAtual, posicaoJogada){
         let novo = new Estado(turnoAtual, posicaoJogada);
-        for(let i = 0; i < 8; i++){
+        for(let i = 0; i < this.tamanhoTabuleiro; i++){
             novo.proximasJogadas[i] = this.proximasJogadas[i];
-            for(let j = 0; j < 8; j++){
+            for(let j = 0; j < this.tamanhoTabuleiro; j++){
                 novo.tabuleiro[i][j] = this.tabuleiro[i][j];
             }
         }
