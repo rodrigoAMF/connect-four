@@ -13,9 +13,13 @@
 
 
 <body>
+<div class="container">
+    <div class="tabuleiro"></div>
+</div>
+<!--
 <div class="container paginaJogo">
-    <div class="row col-lg-10 offset-1">
-      <div class="vezComputador col-lg-1">
+    <div class="row">
+        <div class="vezComputador col-lg-1">
         <div class="fundoComputador">
             <img src="img/computador.png">
             <div class="imagensBola">
@@ -23,100 +27,20 @@
             </div>
         </div>
       </div>
-      <div class="col-lg-8">
-        <div class="container tabuleiro">
-            <!--<div class="linha line-0">
-                <div id="posicao0-0"></div>
-                <div id="posicao0-1"></div>
-                <div id="posicao0-2"></div>
-                <div id="posicao0-3"></div>
-                <div id="posicao0-4"></div>
-                <div id="posicao0-5"></div>
-                <div id="posicao0-6"></div>
-                <div id="posicao0-7"></div>
+    <div class="col-lg-10">
+        <div class="tabuleiro"></div>
+    </div>
+    <div class="vezPessoa col-lg-1">
+        <div class="fundoPessoa">
+            <img src="img/pessoa1.png">
+            <div class="imagensBola">
+                <img src="img/bolaazul.png">
             </div>
-            <div class="linha line-1">
-                <div id="posicao1-0"></div>
-                <div id="posicao1-1"></div>
-                <div id="posicao1-2"></div>
-                <div id="posicao1-3"></div>
-                <div id="posicao1-4"></div>
-                <div id="posicao1-5"></div>
-                <div id="posicao1-6"></div>
-                <div id="posicao1-7"></div>
-            </div>
-            <div class="linha line-2">
-                <div id="posicao2-0"></div>
-                <div id="posicao2-1"></div>
-                <div id="posicao2-2"></div>
-                <div id="posicao2-3"></div>
-                <div id="posicao2-4"></div>
-                <div id="posicao2-5"></div>
-                <div id="posicao2-6"></div>
-                <div id="posicao2-7"></div>
-            </div>
-            <div class="linha line-3">
-                <div id="posicao3-0"></div>
-                <div id="posicao3-1"></div>
-                <div id="posicao3-2"></div>
-                <div id="posicao3-3"></div>
-                <div id="posicao3-4"></div>
-                <div id="posicao3-5"></div>
-                <div id="posicao3-6"></div>
-                <div id="posicao3-7"></div>
-            </div>
-            <div class="linha line-4">
-                <div id="posicao4-0"></div>
-                <div id="posicao4-1"></div>
-                <div id="posicao4-2"></div>
-                <div id="posicao4-3"></div>
-                <div id="posicao4-4"></div>
-                <div id="posicao4-5"></div>
-                <div id="posicao4-6"></div>
-                <div id="posicao4-7"></div>
-            </div>
-            <div class="linha line-5">
-                <div id="posicao5-0"></div>
-                <div id="posicao5-1"></div>
-                <div id="posicao5-2"></div>
-                <div id="posicao5-3"></div>
-                <div id="posicao5-4"></div>
-                <div id="posicao5-5"></div>
-                <div id="posicao5-6"></div>
-                <div id="posicao5-7"></div>
-            </div>
-            <div class="linha line-6">
-                <div id="posicao6-0"></div>
-                <div id="posicao6-1"></div>
-                <div id="posicao6-2"></div>
-                <div id="posicao6-3"></div>
-                <div id="posicao6-4"></div>
-                <div id="posicao6-5"></div>
-                <div id="posicao6-6"></div>
-                <div id="posicao6-7"></div>
-            </div>
-            <div class="linha line-7">
-                <div id="posicao7-0"></div>
-                <div id="posicao7-1"></div>
-                <div id="posicao7-2"></div>
-                <div id="posicao7-3"></div>
-                <div id="posicao7-4"></div>
-                <div id="posicao7-5"></div>
-                <div id="posicao7-6"></div>
-                <div id="posicao7-7"></div>
-            </div>-->
         </div>
-      </div>
-         <div class="vezPessoa col-lg-1">
-            <div class="fundoPessoa">
-                <img src="img/pessoa1.png">
-                <div class="imagensBola">
-                    <img src="img/bolaazul.png">
-                </div>
-            </div> 
       </div>
     </div>
 </div>
+-->
 
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -125,6 +49,10 @@
 <!-- Importação dos custom scripts -->
 <script src="js/Estado.js"></script>
 <script src="js/QuatroEmLinha.js"></script>
-<script src="js/game.js"></script>
+<!--<script src="js/game.js"></script>-->
+<script>
+    QuatroEmLinha.init( document.querySelector('.tabuleiro') );
+    QuatroEmLinha.iniciarNovoJogo();
+</script>
 </body>
 </html>

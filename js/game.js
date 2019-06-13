@@ -1,23 +1,12 @@
+
 let jogo = QuatroEmLinha.getInstance();
-
-console.log(jogo.estadoAtual);
-console.log(jogo.estadoAtual.gerarFilhos());
-
-
-//jogo.estadoAtual = jogo.estadoAtual.gerarFilhos()[3].gerarFilhos()[0].gerarFilhos()[3].gerarFilhos()[1].gerarFilhos()[3].gerarFilhos()[2];
-
-//jogo.estadoAtual = jogo.estadoAtual.gerarFilhos()[4].gerarFilhos()[0].gerarFilhos()[4].gerarFilhos()[1].gerarFilhos()[0];
-
-//jogo.buscarMelhorColunaParaJogar();
-
-//console.log(jogo.estadoAtual);
 
 function geraTabuleiro(){
     let tabuleiro = $(".tabuleiro");
     let stringHTML = "";
-    for(let i=0; i < jogo.estadoAtual.tamanhoTabuleiro; i++) {
+    for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
         stringHTML += "<div class='linha line-" + i + "'>";
-        for (let j = 0; j < jogo.estadoAtual.tamanhoTabuleiro; j++) {
+        for (let j = 0; j < jogo.tamanhoTabuleiro[1]; j++) {
             stringHTML += "<div id='posicao" + i + "-" + j + "'></div>";
         }
         stringHTML += "</div>";
@@ -28,11 +17,12 @@ function geraTabuleiro(){
 
 function bindClickColunas(){
     let divName;
-    for(let i=0; i < jogo.estadoAtual.tamanhoTabuleiro; i++) {
-        for (let j=0; j < jogo.estadoAtual.tamanhoTabuleiro; j++) {
+    for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
+        for (let j=0; j < jogo.tamanhoTabuleiro[1]; j++) {
             divName = "posicao" + i + "-" + j;
             document.getElementById(divName).addEventListener("click", () => {
                 jogo.efetuarJogadaJogador(j);
+                jogo.efetuarJogadaIA();
             });
         }
     }
