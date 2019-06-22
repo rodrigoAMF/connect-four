@@ -184,11 +184,11 @@ const QuatroEmLinha = {
         this.simbolos.indexDoTurno = 0;
         this.fimDeJogo = false;
     },
-    
+
     // TODO: Impedir jogada do jogador enquanto IA não jogar
     realizarJogada(colunaJogada) {
         let linhaJogada = this.indicesDasLinhasParaProximasJogadas[colunaJogada];
-        if (linhaJogada < 0 || this.fimDeJogo || this.tabuleiro[linhaJogada][colunaJogada] !== 0)
+        if (linhaJogada < 0 || this.fimDeJogo || this.tabuleiro[linhaJogada][colunaJogada] !== 0 || this.indexDoTurno === 1)
             return false;
 
         this.tabuleiro[linhaJogada][colunaJogada] = this.simbolos.jogadores[this.simbolos.indexDoTurno];
