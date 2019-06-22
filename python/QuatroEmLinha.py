@@ -1,210 +1,209 @@
 import numpy as np
 
+
 class QuatroEmLinha:
     def __init__(self):
-        self.pecasIguaisParaVencer = 4
-        self.tamanhoTabuleiro = np.array([8, 8])
-        
-        self.tabuleiro = np.zeros([self.tamanhoTabuleiro[0], self.tamanhoTabuleiro[1]], dtype=int)
-        # Locais onde é possível realizar a próxima jogada
-        self.proximasJogadas = np.full((self.tamanhoTabuleiro[1],), self.tamanhoTabuleiro[1]-1)
-        self.recompensaPelaJogada = 0
-        
-        self.inicioDeJogo = True
-        self.fimDeJogo = False
-        self.turnoAtual = 0
-        # -1 = Jogador, 1 = IA
-        self.jogadorAtual = -1
-    
-    def efetuaJogada(self, posicaoJogada):            
-        self.tabuleiro[self.proximasJogadas[posicaoJogada], posicaoJogada] = self.jogadorAtual
-        self.proximasJogadas[posicaoJogada] -= 1
-        if(self.inicioDeJogo):   
-            self.inicioDeJogo = False
-        self.turnoAtual += 1
-        
-        self.recompensaPelaJogada = self.turnoAtual
-        vencedor = self.verificarVencedor()
-        if(vencedor == -1):
-            self.recompensaPelaJogada += 100*(1-(self.turnoAtual/(self.tamanhoTabuleiro[0]*self.tamanhoTabuleiro[1])))
-        elif(vencedor == 1):
-            self.recompensaPelaJogada = 0
-            
-        if(self.jogadorAtual == 1):
-            self.jogadorAtual = -1
+        # 6x7
+        self.tabuleiro = np.array([[0, 0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0, 0]])
+        self.indices_das_linhas_para_proximas_jogadas = np.array([5, 5, 5, 5, 5, 5, 5])
+        self.pecas_iguais_para_vencer = 4
+        # ['Jogador', 'IA']
+        self.jogadores = np.array([-1, 1])
+        self.index_do_turno = 0
+        self.fim_de_jogo = False
+
+    def mudar(self):
+        if self.index_do_turno == 0:
+            self.index_do_turno = 1
         else:
-            self.jogadorAtual = 1
+            self.index_do_turno = 0
 
-        return self.tabuleiro.flatten(), self.recompensaPelaJogada, self.fimDeJogo 
-    
-    def reset(self):
-        self.pecasIguaisParaVencer = 4
-        self.tamanhoTabuleiro = np.array([8, 8])
-        
-        self.tabuleiro = np.zeros([self.tamanhoTabuleiro[0], self.tamanhoTabuleiro[1]], dtype=int)
-        # Locais onde é possível realizar a próxima jogada
-        self.proximasJogadas = np.full((self.tamanhoTabuleiro[1],), self.tamanhoTabuleiro[1]-1)
-        self.recompensaPelaJogada = 0
-        
-        self.inicioDeJogo = True
-        self.fimDeJogo = False
-        self.turnoAtual = 0
-        # 1 = Jogador, -1 = IA
-        self.jogadorAtual = -1
-        
-        return self.tabuleiro.flatten()
-    
-    # verificaVencedor e seta fimDejJogo
-    def verificarVencedor(self):
-        if(self.inicioDeJogo):
-            return 0
-        
-        if(self.turnoAtual == (self.tamanhoTabuleiro[0]*self.tamanhoTabuleiro[1])):
-            self.fimDeJogo = True
-        vencedor = 0
-        for i in range(self.tamanhoTabuleiro[0]):
-            for j in range(self.tamanhoTabuleiro[1]):
-                if(self.tabuleiro[i][j] == self.jogadorAtual):
-                    vencedor = self.verificarVencedorEmPosicaoEspecifica([i, j])
-                    if(vencedor != 0):
-                        self.fimDeJogo = True
-                        return vencedor
+    def eh_fim_de_jogo(self):
+        linhas_totalmente_preenchidas = 0
+        for i in range(self.tabuleiro.shape[0]):
+            contador_preenchidos = 0
+            for j in range(self.tabuleiro.shape[1]):
+                if self.tabuleiro[i][j] != 0:
+                    contador_preenchidos += 1
+            if contador_preenchidos == self.tabuleiro.shape[1]:
+                linhas_totalmente_preenchidas += 1
 
-        return vencedor
-    
+        return linhas_totalmente_preenchidas == self.tabuleiro.shape[0]
 
-    def verificarVencedorEmPosicaoEspecifica(self, posicao):
-        # verifica se é possível ganhar pela direita
-        if(posicao[1]+(self.pecasIguaisParaVencer-1) < self.tamanhoTabuleiro[1]) :
-            posicaoFinal = [posicao[0], posicao[1]+(self.pecasIguaisParaVencer-1)]
-            contadorPecas = 1
-                
-            for i in range(posicao[1]+1, posicaoFinal[1]+1):
-                if(self.tabuleiro[posicao[0]][i] == self.jogadorAtual):
-                    contadorPecas += 1
-                
-            if(contadorPecas == self.pecasIguaisParaVencer):
-                return self.jogadorAtual
-            
-        
-        # verifica se é possível ganhar pela esquerda
-        if(posicao[1]-(self.pecasIguaisParaVencer-1) >= 0) :
-            posicaoFinal = [posicao[0], posicao[1]-(self.pecasIguaisParaVencer-1)]
-            contadorPecas = 1
+    def jogo_finalizado(self):
+        self.fim_de_jogo = True
 
-            for i in range( posicao[1]-1,posicaoFinal[1]+1):
-                if(self.tabuleiro[posicao[0]][i] == self.jogadorAtual):
-                    contadorPecas += 1
-                
-            
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-            
-        
+    def verificar_vencedor(self, posicao):
+        linha = posicao[0]
+        coluna = posicao[1]
+        jogador_atual = self.jogadores[self.index_do_turno]
 
-        # verifica se é possível ganhar por cima
-        if(posicao[0]-(self.pecasIguaisParaVencer-1) >= 0) :
+        # Verifica para baixo
+        linha_final = linha+self.pecas_iguais_para_vencer
+        # coluna_final = coluna
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha-1, coluna) and jogador_atual == self.tabuleiro[linha-1][coluna]:
+            elementos_iguais += 1
 
-            posicaoFinal = [posicao[0]-(self.pecasIguaisParaVencer-1), posicao[1]]
-            contadorPecas = 1
-            for i in range(posicao[0]-1, posicaoFinal[0]+1):
-                if(self.tabuleiro[i][posicao[1]] == self.jogadorAtual):
-                    contadorPecas+=1
-                
-            
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-            
-        
+        i = linha+1
+        j = coluna
+        while self.verificar_se_eh_posicao_valida(i, j) and i < linha_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            i += 1
 
-        # verifica se é possível ganhar por baixo
-        if(posicao[0]+(self.pecasIguaisParaVencer-1) < self.tamanhoTabuleiro[1]):
-            posicaoFinal = [posicao[0]+(self.pecasIguaisParaVencer-1), posicao[1]]
-            contadorPecas = 1
-            
-            for i in range(posicao[0]+1, posicaoFinal[0]+1):
-                if(self.tabuleiro[i][posicao[1]] == self.jogadorAtual):
-                    contadorPecas+=1
-                
-            
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-            
-        
+        # Verifica para cima
+        linha_final = linha-self.pecas_iguais_para_vencer
+        # coluna_final = coluna
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha+1, coluna) and jogador_atual == self.tabuleiro[linha+1][coluna]:
+            elementos_iguais += 1
 
-        # verifica se é possível ganhar pela diagonal superior direita
-        if(posicao[0]-(self.pecasIguaisParaVencer-1) >= 0 
-           and posicao[1]+(self.pecasIguaisParaVencer-1) < self.tamanhoTabuleiro[1]):
-            posicaoFinal = [posicao[0]-(self.pecasIguaisParaVencer-1), posicao[1]+(self.pecasIguaisParaVencer-1)]
-            contadorPecas = 1
-            
-            
-            i = posicao[0]-1
-            for j in range(posicao[1]+1, posicaoFinal[1]+1):
-                if(i < posicaoFinal[0]):
-                    break
-                if(self.tabuleiro[i][j] == self.jogadorAtual):
-                    contadorPecas+=1
-                i=-1
-            
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-            
-        
-        # verifica se é possível ganhar pela diagonal inferior direita
-        if(posicao[0]+(self.pecasIguaisParaVencer-1) < self.tamanhoTabuleiro[1] 
-           and posicao[1]+(self.pecasIguaisParaVencer-1) < self.tamanhoTabuleiro[1]):
-            posicaoFinal = [posicao[0]+(self.pecasIguaisParaVencer-1), posicao[1]+(self.pecasIguaisParaVencer-1)]
-            contadorPecas = 1
+        i = linha-1
+        j = coluna
+        while self.verificar_se_eh_posicao_valida(i, j) and i > linha_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            i -= 1
 
-            i = posicao[0]+1
-            for j in range(posicao[1]+1, posicaoFinal[1]+1):
-                if(i < posicaoFinal[0]):
-                    break
-                if(self.tabuleiro[i][j] == self.jogadorAtual):
-                    contadorPecas+=1                
-                i+=1
-                 
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-            
-        
-        # verifica se é possível ganhar pela diagonal inferior esquerda
-        if(posicao[0]+(self.pecasIguaisParaVencer-1) < self.tamanhoTabuleiro[1] 
-           and posicao[1]-(self.pecasIguaisParaVencer-1) >= 0) :
-            posicaoFinal = [posicao[0]+(self.pecasIguaisParaVencer-1), posicao[1]-(self.pecasIguaisParaVencer-1)]
-            contadorPecas = 1
+        # Verifica para direita
+        # linha_final = linha
+        coluna_final = coluna+self.pecas_iguais_para_vencer
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha, coluna-1) and jogador_atual == self.tabuleiro[linha][coluna-1]:
+            elementos_iguais += 1
 
-            j = posicao[1]-1
-            for i in range(posicao[0]+1, posicaoFinal[0]+1):
-                if(j < posicaoFinal[1]):
-                    break
-                
-                if(self.tabuleiro[i][j] == self.jogadorAtual):
-                    contadorPecas+=1                
-                j-=1
-            
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-            
-        
-        # verifica se é possível ganhar pela diagonal superior esquerda
-        if(posicao[0]-(self.pecasIguaisParaVencer-1) >= 0 
-           and posicao[1]-(self.pecasIguaisParaVencer-1) >= 0) :
-            posicaoFinal = [posicao[0]-(self.pecasIguaisParaVencer-1), posicao[1]-(self.pecasIguaisParaVencer-1)]
-            contadorPecas = 1
+        i = linha
+        j = coluna + 1
+        while self.verificar_se_eh_posicao_valida(i, j) and j < coluna_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            j += 1
 
-            j = posicao[1]-1
-            for i in range(posicao[0]-1, posicaoFinal[0]-1, -1):
-                if(j < posicaoFinal[1]):
-                    break
-                
-                if(self.tabuleiro[i][j] == self.jogadorAtual):
-                    contadorPecas+=1         
-                j-=1
-            
-            if(contadorPecas == (self.pecasIguaisParaVencer)):
-                return self.jogadorAtual
-             
+        # Verifica para esquerda
+        # linha_final = linha
+        coluna_final = coluna-self.pecas_iguais_para_vencer
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha, coluna+1) and jogador_atual == self.tabuleiro[linha][coluna+1]:
+            elementos_iguais += 1
+
+        i = linha
+        j = coluna - 1
+        while self.verificar_se_eh_posicao_valida(i, j) and j > coluna_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            j -= 1
+
+        # Verifica pela diagonal superior direita
+        # linha_final = linha-self.pecas_iguais_para_vencer
+        coluna_final = coluna+self.pecas_iguais_para_vencer
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha+1, coluna-1) and jogador_atual == self.tabuleiro[linha+1][coluna-1]:
+            elementos_iguais += 1
+
+        i = linha - 1
+        j = coluna + 1
+        while self.verificar_se_eh_posicao_valida(i, j) and j < coluna_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            i -= 1
+            j += 1
+
+        # Verifica pela diagonal inferior esquerda
+        # linha_final = linha+self.pecas_iguais_para_vencer
+        coluna_final = coluna-self.pecas_iguais_para_vencer
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha-1, coluna+1) and jogador_atual == self.tabuleiro[linha-1][coluna+1]:
+            elementos_iguais+=1
+
+        i = linha + 1
+        j = coluna - 1
+        while self.verificar_se_eh_posicao_valida(i, j) and j > coluna_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            i += 1
+            j -= 1
+
+        # Verifica pela diagonal superior esquerda
+        linha_final = linha-self.pecas_iguais_para_vencer
+        # coluna_final = coluna-self.pecas_iguais_para_vencer
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha+1, coluna+1) and jogador_atual == self.tabuleiro[linha+1][coluna+1]:
+            elementos_iguais += 1
+
+        i = linha - 1
+        j = coluna - 1
+        while self.verificar_se_eh_posicao_valida(i, j) and i > linha_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            i -= 1
+            j -= 1
+
+        # Verifica pela diagonal inferior direita
+        linha_final = linha+self.pecas_iguais_para_vencer
+        # coluna_final = coluna+self.pecas_iguais_para_vencer
+        elementos_iguais = 1
+        if self.verificar_se_eh_posicao_valida(linha-1, coluna-1) and jogador_atual == self.tabuleiro[linha-1][coluna-1]:
+            elementos_iguais += 1
+
+        i = linha + 1
+        j = coluna + 1
+        while self.verificar_se_eh_posicao_valida(i, j) and i < linha_final:
+            if jogador_atual == self.tabuleiro[i][j]:
+                elementos_iguais += 1
+                if elementos_iguais == 4:
+                    return jogador_atual
+            i += 1
+            j += 1
+
+        # Sem vencedor
         return 0
+
+    def verificar_se_eh_posicao_valida(self, i, j):
+        return 0 <= i < self.tabuleiro.shape[0] and 0 <= j < self.tabuleiro.shape[1]
+
+    def iniciar_novo_jogo(self):
+        for i in range(self.tabuleiro.shape[0]):
+            for j in range(self.tabuleiro.shape[1]):
+                self.tabuleiro[i][j] = 0
+        self.indices_das_linhas_para_proximas_jogadas.fill((self.tabuleiro.shape[0]-1))
+        self.index_do_turno = 0
+        self.fim_de_jogo = False
+
+    def realizar_jogada(self, coluna_jogada):
+        linha_jogada = self.indices_das_linhas_para_proximas_jogadas[coluna_jogada]
+        if linha_jogada < 0 or self.fim_de_jogo or self.tabuleiro[linha_jogada][coluna_jogada] != 0:
+            return False
+
+        self.tabuleiro[linha_jogada][coluna_jogada] = self.jogadores[self.index_do_turno]
+        self.indices_das_linhas_para_proximas_jogadas[coluna_jogada] -= 1
+
+        if self.eh_fim_de_jogo():
+            self.jogo_finalizado()
         
+        vencedor = self.verificar_vencedor([linha_jogada, coluna_jogada])
+        if vencedor == -1 or vencedor == 1:
+            self.jogo_finalizado()
+        else:
+            self.mudar()
+
+        return True
