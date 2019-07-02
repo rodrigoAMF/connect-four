@@ -4,21 +4,6 @@ from flask_cors import CORS
 import json
 import numpy as np
 from QuatroEmLinha import QuatroEmLinha
-from DQLAgent import DQNAgent
-
-env = QuatroEmLinha()
-tamanho_estado = env.tamanhoTabuleiro[0]*env.tamanhoTabuleiro[1]
-tamanho_acao = env.proximasJogadas.shape[0]
-agent = DQNAgent(tamanho_estado, tamanho_acao)
-agent.load("save/4emLinha-dql.h5")
-agent.epsilon = 0
-estado = env.reset()
-estado = np.reshape(estado, [1, tamanho_estado])
-acao = agent.act(estado)
-estado, __, __ = env.efetuaJogada(acao)
-env.efetuaJogada(0)
-estado = np.reshape(estado.flatten(), [1, tamanho_estado])
-acao = agent.act(estado)
 
 app = Flask(__name__)
 CORS(app)
@@ -61,3 +46,4 @@ def index():
 
 if __name__ == "__main__":
     app.run()
+    #app.run(host='10.14.160.110')

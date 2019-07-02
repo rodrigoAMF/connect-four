@@ -245,7 +245,7 @@ const QuatroEmLinha = {
         for(let i = 0; i < this.tabuleiro.length; i++){
             for(let j = 0; j < this.tabuleiro[i].length; j++){
                 html += `<div onclick="QuatroEmLinha.realizarJogada(${j});">`;
-                if(this.tabuleiro[i][j] !== 0){
+                if(this.tabuleiro[i][j] !== 0) {
                     html += this.tabuleiro[i][j];
                 }
                 html += "</div>";
