@@ -1,16 +1,25 @@
 from Estado import Estado
 import copy
+import time
 
 
 class QuatroEmLinha:
     def __init__(self):
         self.estado_atual = Estado()
-        self.nivel_maximo_busca = 6
+        self.nivel_maximo_busca = 7
+        self.nos_explorados = 0
 
     def encontrar_solucao(self):
-        return self.negamax(self.estado_atual)
+        start = time.time()
+        self.nos_explorados = 0
+        melhor_pontuacao, coluna_melhor_pontuacao = self.negamax(self.estado_atual)
+        end = time.time()
+        print(str(self.nos_explorados) + " Nós explorados em " + str(end - start) + " s")
+        return melhor_pontuacao, coluna_melhor_pontuacao
 
+    # Retorna pontuacao e melhor coluna para se jogar
     def negamax(self, estado, nivel=1, nivel_max=True):
+        self.nos_explorados += 1
         # Verifica se aconteceu um empate
         if estado.turno_atual == estado.altura_tabuleiro * estado.largura_tabuleiro:
             return 0, -1
@@ -41,11 +50,3 @@ class QuatroEmLinha:
                     coluna_melhor_pontuacao = coluna
 
         return melhor_pontuacao, coluna_melhor_pontuacao
-
-    def ler_arquivo_jogadas(self, arquivo):
-        arquivo = open(arquivo, "r")
-        #lines = arquivo.readlines()
-
-        lines = arquivo.read().split(' ')
-
-        arquivo.close()
