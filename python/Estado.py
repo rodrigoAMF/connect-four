@@ -13,7 +13,7 @@ class Estado:
         self.turno_atual = 0
 
     def eh_possivel_jogar(self, coluna):
-        return self.posicao_proximas_jogadas[coluna] < self.altura_tabuleiro
+        return self.posicao_proximas_jogadas[coluna] >= 0
 
     def jogar(self, coluna):
         self.tabuleiro[self.posicao_proximas_jogadas[coluna]][coluna] = 1 + (self.turno_atual % 2)
@@ -32,7 +32,7 @@ class Estado:
             return True
 
         # Verifica Direita
-        if ((coluna > 0 and coluna + 2 < self.largura_tabuleiro
+        if ((coluna >= 0 and coluna + 2 < self.largura_tabuleiro
              and self.tabuleiro[linha][coluna - 1] == jogador_atual
              and self.tabuleiro[linha][coluna + 1] == jogador_atual
              and self.tabuleiro[linha][coluna + 2] == jogador_atual)
