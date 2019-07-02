@@ -1,33 +1,35 @@
+
 let jogo = QuatroEmLinha.getInstance();
-jogo.nivelMaximoDFS = 10;
-console.log(jogo.estadoAtual);
 
-let divName;
-for(let i=0; i < 8; i++) {
-    for (let j=0; j < 8; j++) {
-        divName = "posicao" + i + "-" + j;
-        if (j === 0) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna0);
-        } else if (j === 1) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna1);
-        } else if (j === 2) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna2);
-        } else if (j === 3) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna3);
-        } else if (j === 4) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna4);
-        } else if (j === 5) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna5);
-        } else if (j === 6) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna6);
-        } else if (j === 7) {
-            document.getElementById(divName).addEventListener("click", jogo.clickColuna7);
+function geraTabuleiro(){
+    let tabuleiro = $(".tabuleiro");
+    let stringHTML = "";
+    for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
+        stringHTML += "<div class='linha line-" + i + "'>";
+        for (let j = 0; j < jogo.tamanhoTabuleiro[1]; j++) {
+            stringHTML += "<div id='posicao" + i + "-" + j + "'></div>";
         }
+        stringHTML += "</div>";
+    }
 
+    tabuleiro.html(stringHTML);
+}
+
+function bindClickColunas(){
+    let divName;
+    for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
+        for (let j=0; j < jogo.tamanhoTabuleiro[1]; j++) {
+            divName = "posicao" + i + "-" + j;
+            document.getElementById(divName).addEventListener("click", () => {
+                jogo.efetuarJogadaJogador(j);
+                jogo.efetuarJogadaIA();
+            });
+        }
     }
 }
 
-
+geraTabuleiro();
+bindClickColunas();
 
 /*let start = performance.now();
 

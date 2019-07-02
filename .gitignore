@@ -246,3 +246,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/git,sass,linux,windows,sublimetext,webstorm+all,phpstorm+all,visualstudiocode
+
+python/__pycache__/
