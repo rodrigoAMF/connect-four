@@ -20,6 +20,18 @@ class Estado:
         self.posicao_proximas_jogadas[coluna] -= 1
         self.turno_atual += 1
 
+    def carrega_sequencia_jogadas(self, sequencia, sub=1):
+        for i in range(len(sequencia)):
+            coluna = int(sequencia[i]) - sub
+            if (coluna < 0
+                    or coluna >= self.largura_tabuleiro
+                    or not self.eh_possivel_jogar(coluna)
+                    or self.eh_jogada_vitoriosa(coluna)):
+                return i
+            self.jogar(coluna)
+
+        return len(sequencia)
+
     def eh_jogada_vitoriosa(self, coluna):
         jogador_atual = 1 + (self.turno_atual % 2)
         linha = self.posicao_proximas_jogadas[coluna]
@@ -56,16 +68,16 @@ class Estado:
             return True
 
         # Verifica diagonal superior direita
-        if((linha + 1 < self.altura_tabuleiro and coluna - 1 >= 0
-            and linha - 2 >= 0 and coluna + 2 < self.largura_tabuleiro
-            and self.tabuleiro[linha + 1][coluna - 1] == jogador_atual
-            and self.tabuleiro[linha - 1][coluna + 1] == jogador_atual
-            and self.tabuleiro[linha - 2][coluna + 2] == jogador_atual)
+        if ((linha + 1 < self.altura_tabuleiro and coluna - 1 >= 0
+             and linha - 2 >= 0 and coluna + 2 < self.largura_tabuleiro
+             and self.tabuleiro[linha + 1][coluna - 1] == jogador_atual
+             and self.tabuleiro[linha - 1][coluna + 1] == jogador_atual
+             and self.tabuleiro[linha - 2][coluna + 2] == jogador_atual)
                 or (
-                    linha - 3 >= 0 and coluna + 3 < self.largura_tabuleiro
-                    and self.tabuleiro[linha - 1][coluna + 1] == jogador_atual
-                    and self.tabuleiro[linha - 2][coluna + 2] == jogador_atual
-                    and self.tabuleiro[linha - 3][coluna + 3] == jogador_atual
+                        linha - 3 >= 0 and coluna + 3 < self.largura_tabuleiro
+                        and self.tabuleiro[linha - 1][coluna + 1] == jogador_atual
+                        and self.tabuleiro[linha - 2][coluna + 2] == jogador_atual
+                        and self.tabuleiro[linha - 3][coluna + 3] == jogador_atual
                 )):
             return True
 

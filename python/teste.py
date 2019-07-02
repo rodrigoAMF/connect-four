@@ -1,12 +1,6 @@
 from QuatroEmLinha import QuatroEmLinha
 
 jogo = QuatroEmLinha()
+jogo.estado_atual.carrega_sequencia_jogadas("1625", 0)
 
-jogo.estado_atual.jogar(1)
-jogo.estado_atual.jogar(6)
-jogo.estado_atual.jogar(2)
-jogo.estado_atual.jogar(5)
-jogo.estado_atual.jogar(3)
-
-
-solucao = jogo.encontrar_solucao()
+pontuacao, coluna_para_jogar = jogo.encontrar_solucao()
