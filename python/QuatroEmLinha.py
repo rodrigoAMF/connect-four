@@ -72,6 +72,7 @@ class QuatroEmLinha:
 
         return alfa, coluna_melhor_pontuacao
 
+
     def printa_bits(self, bits):
         bits_string = '{0:048b}'.format(bits)
         print(bits_string)
@@ -81,3 +82,35 @@ class QuatroEmLinha:
             else:
                 print(bits_string[i], end='')
         '''
+
+    def printa_bits_matriz(self, bits):
+        bits_string = '{0:048b}'.format(bits)
+        cont = 0
+        p1 = ''
+        p2 = ''
+        p3 = ''
+        p4 = ''
+        p5 = ''
+        p6 = ''
+        for i in range(len(bits_string)):
+            if cont == 0:
+                p1 += bits_string[i] + " "
+                cont += 1
+            elif cont == 1:
+                p2 += bits_string[i] + " "
+                cont += 1
+            elif cont == 2:
+                p3 += bits_string[i] + " "
+                cont += 1
+            elif cont == 3:
+                p4 += bits_string[i] + " "
+                cont += 1
+            elif cont == 4:
+                p5 += bits_string[i] + " "
+                cont += 1
+            elif cont == 5:
+                p6 += bits_string[i] + " "
+                cont = 0
+
+        print(p6 + "\n" + p5 + "\n" + p4 + "\n" + p3 + "\n" + p2 + "\n" + p1)
+
