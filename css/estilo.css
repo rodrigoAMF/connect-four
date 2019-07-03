@@ -10,9 +10,7 @@ body{
 		border-radius: 10px;
 }
 
-button{
-	width: 300px;
-}
+
 
 a:hover{
 	text-decoration: none;
@@ -21,6 +19,10 @@ a:hover{
 /*Estilos necessario para a página inicial */
 .paginaInicial img{
 	margin-top: 80px;
+}
+
+.paginaInicial button{
+	width: 300px;
 }
 
 /*Estilos necessario para a página de dificuldade */
@@ -35,6 +37,11 @@ a:hover{
 .paginaDificuldade h2{
 	margin-left: 50px;
 }
+
+.paginaDificuldade button{
+	width: 300px;
+}
+
 
 /*Estilos necessarios para página de jogo*/
 .fundoTabuleiro{
@@ -76,7 +83,7 @@ a:hover{
 }
 
 .linha {
-	background: transparent;
+	background: white;
 	//background-image: url("../img/fundo.png");
   float: left;
   width: 80px;
@@ -98,9 +105,9 @@ a:hover{
 	border-radius: 10px;
 }
 
-.bolinhaDesce{
+.bolinhaDesce0{
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;
@@ -117,7 +124,7 @@ a:hover{
 .bolinhaDesce1
 {
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;
@@ -134,7 +141,7 @@ a:hover{
 .bolinhaDesce2
 {
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;
@@ -151,7 +158,7 @@ a:hover{
 .bolinhaDesce3
 {
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;
@@ -168,7 +175,7 @@ a:hover{
 .bolinhaDesce4
 {
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;
@@ -185,7 +192,7 @@ a:hover{
 .bolinhaDesce5
 {
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;
@@ -202,7 +209,7 @@ a:hover{
 .bolinhaDesce6
 {
 	position: absolute;
-	//display: none;
+	display: none;
 	background-color: #008b8b;
 	float: left;
 	width: 80px;

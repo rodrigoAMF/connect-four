@@ -1,7 +1,8 @@
 adicionaClick();
 var jogadorAtual = -1;  // -1 jogador | 1 IA
 var qntPecasColuna = [5,5,5,5,5,5,5];
-document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
+var continua;
+var colunasJogadas = [];
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
 
@@ -62,27 +63,37 @@ function clickColuna6(){
     if(qntPecasColuna[6] >= 0){selecionaJogador(6);}
 }
 
+
 function selecionaJogador(coluna){
+    document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "block";
+
     if(jogadorAtual === -1){ // vez do jogador
-
-        var div = $(".bolinhaDesce"); //350 a 14
-        div.animate({bottom:  (14*(1+(6*(qntPecasColuna[coluna]-5))))+'px'},  800, "linear");
-        setInterval(pintaBolinha, 800);
-
-
-        qntPecasColuna[coluna]--;
-        document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
-        document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
-    }else{ // vez da IA
-
-        document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#8b0000";
-        qntPecasColuna[coluna]--;
-        document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
-        document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
+      document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#008b8b";
+    }else{
+      document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#8b0000";
     }
-    jogadorAtual = (this.jogadorAtual === -1) ? 1 : -1;
-}
 
-function pintaBolinha(){
-  document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b"
+    var div = $(".bolinhaDesce"+coluna);
+    desloca = (14*(6*(5-qntPecasColuna[coluna])))
+
+    div.animate({bottom: desloca +'px'}, 800, "linear", function() {
+        colunasJogadas.push(coluna);
+        if(jogadorAtual === -1){ // vez do jogador
+          document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
+          qntPecasColuna[coluna]--;
+          document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
+          document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
+        } else {
+          document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#8b0000";
+          qntPecasColuna[coluna]--;
+          document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
+          document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
+        }
+        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "none";
+        div.removeAttr('style');
+        jogadorAtual = (jogadorAtual === -1) ? 1 : -1;
+    });
+
+    console.log(colunasJogadas);
+
 }
