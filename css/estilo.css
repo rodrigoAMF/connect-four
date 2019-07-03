@@ -76,7 +76,7 @@ a:hover{
 }
 
 .linha {
-	background: white;
+	background: transparent;
 	//background-image: url("../img/fundo.png");
   float: left;
   width: 80px;
@@ -85,6 +85,7 @@ a:hover{
   border-radius: 60px;
   margin: 2px;
 	cursor: pointer;
+	z-index: 5;
 }
 
 .tabuleiro{
@@ -100,14 +101,16 @@ a:hover{
 .bolinhaDesce
 {
 	position: absolute;
+	//display: none;
 	background-color: #008b8b;
 	float: left;
-  	width: 80px;
-  	height: 80px;
-  	border: 2px solid #000;
-  	border-radius: 60px;
-  	margin: 2px;
-  	margin-right: 50px;
-  	margin-bottom: 50px;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-right: 50px;
+	margin-bottom: 50px;
 	cursor: pointer;
+	//z-index: 0;
 }

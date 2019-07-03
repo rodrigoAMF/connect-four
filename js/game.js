@@ -64,10 +64,14 @@ function clickColuna6(){
 
 function selecionaJogador(coluna){
     if(jogadorAtual === -1){ // vez do jogador
-        // var div = document.getElementById("#posicao0-"+coluna);
-        // div.animate({bottom: '10px'}, "slow");
+        // var div = document.getElementsByClassName("bolinhaDesce")[0];
+        // //console.log(div);
+        // div.animate({ "width" : 68 },1000);
 
-        document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
+        var div = $(".bolinhaDesce"); //350 a 14
+        div.animate({bottom: '14px'},  800, "linear");
+
+        //document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
         qntPecasColuna[coluna]--;
         document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
         document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
