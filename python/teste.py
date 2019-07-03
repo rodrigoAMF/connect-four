@@ -7,7 +7,7 @@ def printa():
 
 
 jogo = QuatroEmLinha()
-jogo.estado_atual.carrega_sequencia_jogadas("1625", 1)
+jogo.estado_atual.carrega_sequencia_jogadas("6146", 1)
 #printa()
 #jogo.estado_atual.eh_jogada_vitoriosa(2)
 '''jogo.estado_atual.jogar(0)
