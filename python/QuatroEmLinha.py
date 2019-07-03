@@ -1,6 +1,7 @@
 from Estado import Estado
 import copy
 import time
+import numpy as np
 
 
 class QuatroEmLinha:
@@ -8,6 +9,10 @@ class QuatroEmLinha:
         self.estado_atual = Estado()
         self.nivel_maximo_busca = 11
         self.nos_explorados = 0
+        # Ordem de exploração das colunas
+        self.ordem_colunas = np.zeros(self.estado_atual.largura_tabuleiro, dtype=int)
+        for i in range(self.estado_atual.largura_tabuleiro):
+            self.ordem_colunas[i] = int(self.estado_atual.largura_tabuleiro/2) + int(((1-(2*(i%2)))*(i+1))/2)
 
     def encontrar_solucao(self):
         start = time.time()
@@ -48,9 +53,9 @@ class QuatroEmLinha:
                 return beta, -1
         coluna_melhor_pontuacao = -1
         for coluna in range(estado.largura_tabuleiro):
-            if estado.eh_possivel_jogar(coluna):
+            if estado.eh_possivel_jogar(self.ordem_colunas[coluna]):
                 estado_novo = copy.deepcopy(estado)
-                estado_novo.jogar(coluna)
+                estado_novo.jogar(self.ordem_colunas[coluna])
                 pontuacao, __ = self.negamax(estado_novo, -beta, -alfa, nivel + 1, not nivel_max)
                 pontuacao = -pontuacao
                 if pontuacao >= beta:
