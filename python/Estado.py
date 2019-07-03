@@ -22,7 +22,7 @@ class Estado:
 
     def jogar(self, coluna):
         jogada = 1 << self.posicao_proximas_jogadas[coluna]
-        self.posicao_proximas_jogadas += 1
+        self.posicao_proximas_jogadas[coluna] += 1
         self.tabuleiro[self.turno_atual & 1] ^= jogada
         self.jogadas[self.turno_atual] = coluna
         self.turno_atual += 1

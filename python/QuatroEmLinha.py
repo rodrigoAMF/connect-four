@@ -92,7 +92,7 @@ class QuatroEmLinha:
         p4 = ''
         p5 = ''
         p6 = ''
-        for i in range(len(bits_string)):
+        for i in range(len(bits_string)-1, -1, -1):
             if cont == 0:
                 p1 += bits_string[i] + " "
                 cont += 1
