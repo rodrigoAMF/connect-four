@@ -98,8 +98,7 @@ a:hover{
 	border-radius: 10px;
 }
 
-.bolinhaDesce
-{
+.bolinhaDesce{
 	position: absolute;
 	//display: none;
 	background-color: #008b8b;

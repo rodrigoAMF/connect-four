@@ -64,14 +64,12 @@ function clickColuna6(){
 
 function selecionaJogador(coluna){
     if(jogadorAtual === -1){ // vez do jogador
-        // var div = document.getElementsByClassName("bolinhaDesce")[0];
-        // //console.log(div);
-        // div.animate({ "width" : 68 },1000);
 
         var div = $(".bolinhaDesce"); //350 a 14
-        div.animate({bottom: '14px'},  800, "linear");
+        div.animate({bottom:  (14*(1+(6*(qntPecasColuna[coluna]-5))))+'px'},  800, "linear");
+        setInterval(pintaBolinha, 800);
 
-        //document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
+
         qntPecasColuna[coluna]--;
         document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
         document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
@@ -83,4 +81,8 @@ function selecionaJogador(coluna){
         document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
     }
     jogadorAtual = (this.jogadorAtual === -1) ? 1 : -1;
+}
+
+function pintaBolinha(){
+  document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b"
 }
