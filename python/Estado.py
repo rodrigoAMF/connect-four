@@ -7,8 +7,7 @@ class Estado:
         self.largura_tabuleiro = 7  # Largura do tabuleiro
 
         # bitboard
-        self.tabuleiro = 0
-        self.mascara = 0
+        self.tabuleiro = [0, 0]
         # Posições disponíveis para próximas jogadas em cada coluna
         self.posicao_proximas_jogadas = np.zeros(self.largura_tabuleiro, dtype=int)
         for coluna in range(self.largura_tabuleiro):
@@ -18,21 +17,15 @@ class Estado:
         self.jogadas = [None] * ((self.largura_tabuleiro * self.altura_tabuleiro) + 1)
 
     def eh_possivel_jogar(self, coluna):
-        return self.mascara & self.top_mask(coluna) == 0
-
-        '''top_mask = (1 << (self.altura_tabuleiro - 1)) << coluna*(self.altura_tabuleiro+1)
-        mask = self.tabuleiro[0] | self.tabuleiro[1]
-        return (mask & top_mask) == 0'''
+        mascara = self.tabuleiro[0] ^ self.tabuleiro[1]
+        return mascara & self.top_mask(coluna) == 0
 
     def jogar(self, coluna):
-        self.tabuleiro ^= self.mascara
-        self.mascara |= self.mascara + self.bottom_mask(coluna)
-        self.turno_atual += 1
-        '''jogada = 1 << self.posicao_proximas_jogadas[coluna]
+        jogada = 1 << self.posicao_proximas_jogadas[coluna]
         self.posicao_proximas_jogadas += 1
         self.tabuleiro[self.turno_atual & 1] ^= jogada
         self.jogadas[self.turno_atual] = coluna
-        self.turno_atual += 1'''
+        self.turno_atual += 1
 
     def desfazer_jogada(self):
         self.turno_atual -= 1
@@ -54,9 +47,21 @@ class Estado:
         return len(sequencia)
 
     def eh_jogada_vitoriosa(self, coluna):
-        tabuleiro_aux = self.tabuleiro
-        tabuleiro_aux |= (self.mascara + self.bottom_mask(coluna)) & self.column_mask(coluna)
-        return self.alinhamento(tabuleiro_aux)
+        self.jogar(coluna)
+        bitboard = self.tabuleiro[self.turno_atual & 1]
+        vitoria = False
+        if bitboard & (bitboard >> 6) & (bitboard >> 12) & (bitboard >> 18) != 0:
+            vitoria = True      # diagonal \
+        if bitboard & (bitboard >> 8) & (bitboard >> 16) & (bitboard >> 24) != 0:
+            vitoria = True      # diagonal /
+        if bitboard & (bitboard >> 7) & (bitboard >> 14) & (bitboard >> 21) != 0:
+            vitoria = True      # horizontal
+        if bitboard & (bitboard >> 1) & (bitboard >> 2) & (bitboard >> 3) != 0:
+            vitoria = True      # vertical
+
+        self.desfazer_jogada()
+
+        return vitoria
 
         '''bitboard = self.tabuleiro[self.turno_atual & 1]
         direcoes = [1, 7, 6, 8]
