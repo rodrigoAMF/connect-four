@@ -75,7 +75,7 @@ a:hover{
 	margin-top: 5px;
 }
 
-.linha div {
+.linha {
 	background: white;
 	//background-image: url("../img/fundo.png");
   float: left;
@@ -95,4 +95,19 @@ a:hover{
 	width: 640px;
 	height: 530px;
 	border-radius: 10px;
+}
+
+.bolinhaDesce
+{
+	position: absolute;
+	background-color: #008b8b;
+	float: left;
+  	width: 80px;
+  	height: 80px;
+  	border: 2px solid #000;
+  	border-radius: 60px;
+  	margin: 2px;
+  	margin-right: 50px;
+  	margin-bottom: 50px;
+	cursor: pointer;
 }

@@ -64,8 +64,8 @@ function clickColuna6(){
 
 function selecionaJogador(coluna){
     if(jogadorAtual === -1){ // vez do jogador
-        var div = document.getElementById("#posicao0-"+coluna);
-        div.animate({bottom: '10px'}, "slow");
+        // var div = document.getElementById("#posicao0-"+coluna);
+        // div.animate({bottom: '10px'}, "slow");
 
         document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
         qntPecasColuna[coluna]--;
