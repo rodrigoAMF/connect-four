@@ -1,9 +1,10 @@
 from QuatroEmLinha import QuatroEmLinha
 
 jogo = QuatroEmLinha()
-jogo.estado_atual.carrega_sequencia_jogadas("614657", 1)
-jogo.estado_atual.jogar(2)
-jogo.estado_atual.jogar(6)
+#jogo.estado_atual.carrega_sequencia_jogadas("614657", 1)
+jogo.estado_atual.jogar(1)
+jogo.estado_atual.jogar(1)
+jogo.printa_bits(jogo.estado_atual.tabuleiro[jogo.estado_atual.turno_atual & 1])
 jogo.printa_bits_matriz(jogo.estado_atual.tabuleiro[jogo.estado_atual.turno_atual & 1])
 jogo.estado_atual.eh_jogada_vitoriosa(2)
 '''jogo.estado_atual.jogar(0)
