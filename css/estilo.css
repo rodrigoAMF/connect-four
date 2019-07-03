@@ -113,3 +113,105 @@ a:hover{
 	cursor: pointer;
 	//z-index: 0;
 }
+
+.bolinhaDesce1
+{
+	position: absolute;
+	//display: none;
+	background-color: #008b8b;
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-left: 86px;
+	margin-bottom: 50px;
+	cursor: pointer;
+	//z-index: 0;
+}
+
+.bolinhaDesce2
+{
+	position: absolute;
+	//display: none;
+	background-color: #008b8b;
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-left: 170px;
+	margin-bottom: 50px;
+	cursor: pointer;
+	//z-index: 0;
+}
+
+.bolinhaDesce3
+{
+	position: absolute;
+	//display: none;
+	background-color: #008b8b;
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-left: 254px;
+	margin-bottom: 50px;
+	cursor: pointer;
+	//z-index: 0;
+}
+
+.bolinhaDesce4
+{
+	position: absolute;
+	//display: none;
+	background-color: #008b8b;
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-left: 338px;
+	margin-bottom: 50px;
+	cursor: pointer;
+	//z-index: 0;
+}
+
+.bolinhaDesce5
+{
+	position: absolute;
+	//display: none;
+	background-color: #008b8b;
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-left: 422px;
+	margin-bottom: 50px;
+	cursor: pointer;
+	//z-index: 0;
+}
+
+.bolinhaDesce6
+{
+	position: absolute;
+	//display: none;
+	background-color: #008b8b;
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
+	margin-left: 506px;
+	margin-bottom: 50px;
+	cursor: pointer;
+	//z-index: 0;
+}
