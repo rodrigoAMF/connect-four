@@ -9,9 +9,9 @@ class Estado:
         # bitboard
         self.tabuleiro = [0, 0]
         # Posições disponíveis para próximas jogadas em cada coluna
-        self.posicao_proximas_jogadas = np.zeros(self.largura_tabuleiro, dtype=int)
+        self.posicao_proximas_jogadas = []
         for coluna in range(self.largura_tabuleiro):
-            self.posicao_proximas_jogadas[coluna] = coluna * 7
+            self.posicao_proximas_jogadas.append(coluna * 7)
         # Número de jogadas desde o início do jogo
         self.turno_atual = 0
         self.jogadas = [None] * ((self.largura_tabuleiro * self.altura_tabuleiro) + 1)
@@ -48,7 +48,7 @@ class Estado:
 
     def eh_jogada_vitoriosa(self, coluna):
         self.jogar(coluna)
-        bitboard = self.tabuleiro[self.turno_atual & 1]
+        bitboard = self.tabuleiro[not (self.turno_atual & 1)]
         vitoria = False
         if bitboard & (bitboard >> 6) & (bitboard >> 12) & (bitboard >> 18) != 0:
             vitoria = True      # diagonal \
