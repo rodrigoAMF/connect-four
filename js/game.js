@@ -1,56 +1,82 @@
-//
-// //let jogo = QuatroEmLinha.getInstance();
-//
-//
-// function bindClickColunas(){
-//     let divName;
-//     for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
-//         for (let j=0; j < jogo.tamanhoTabuleiro[1]; j++) {
-//             divName = "posicao" + i + "-" + j;
-//             document.getElementById(divName).addEventListener("click", () => {
-//                 //jogo.efetuarJogadaJogador(j);
-//                 //jogo.efetuarJogadaIA();
-//             });
-//         }
-//     }
-// }
-//
-// bindClickColunas();
-//
-// /*let start = performance.now();
-//
-// jogo.dfs(jogo.estadoAtual, true,1);
-//
-// let end = performance.now();
-// let duration = (end - start)/(10**3);
-// duration = duration.toFixed(2);
-//
-// alert("Finalizado execução da DFS com " + jogo.nivelMaximoDFS + " níveis de profundidade em " + duration + " segundos");
-// */
-//
-// /*
-// let pai = new Estado();
-//
-// let filhos = pai.geraFilhos()[0].geraFilhos()[0].geraFilhos()[0].geraFilhos();
-//
-// console.log(filhos);
-//
-//
-//
-// let string = "1234567812345678123456781234567812345678123456781234567812345678";
-//
-// console.log(string);
-//
-// console.log(string[2]);
-//
-// string[2] = "5";
-//
-// console.log(string[2]);
-// */
-// /*
-// jogo.dfs(jogo.estadoAtual, 1);
-//
-// let melhor = jogo.estadoAtual.melhorJogada;
-//
-// console.log(melhor);
-// */
+adicionaClick();
+var jogadorAtual = -1;  // -1 jogador | 1 IA
+var qntPecasColuna = [5,5,5,5,5,5,5];
+document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
+document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
+
+
+//Adiciona efeito de click em todas as div e seleciona a coluna
+function adicionaClick(){
+  let divName = "";
+  for(let i=0; i < 7; i++) {
+      for (let j=0; j < 6; j++) {
+          divName = "posicao" + j + "-" + i;
+          if (i === 0) {
+              document.getElementById(divName).addEventListener("click", clickColuna0);
+          } else if (i === 1) {
+              document.getElementById(divName).addEventListener("click", clickColuna1);
+          } else if (i === 2) {
+              document.getElementById(divName).addEventListener("click", clickColuna2);
+          } else if (i === 3) {
+              document.getElementById(divName).addEventListener("click", clickColuna3);
+          } else if (i === 4) {
+              document.getElementById(divName).addEventListener("click", clickColuna4);
+          } else if (i === 5) {
+              document.getElementById(divName).addEventListener("click", clickColuna5);
+          } else if (i === 6) {
+              document.getElementById(divName).addEventListener("click", clickColuna6);
+          } else if (i === 7) {
+              document.getElementById(divName).addEventListener("click", clickColuna7);
+          }
+
+      }
+  }
+}
+
+
+function clickColuna0(){
+    if(qntPecasColuna[0] >= 0){selecionaJogador(0);}
+}
+
+function clickColuna1(){
+    if(qntPecasColuna[1] >= 0){selecionaJogador(1);}
+}
+
+function clickColuna2(){
+    if(qntPecasColuna[2] >= 0){selecionaJogador(2);}
+}
+
+function clickColuna3(){
+    if(qntPecasColuna[3] >= 0){selecionaJogador(3);}
+}
+
+function clickColuna4(){
+    if(qntPecasColuna[4] >= 0){selecionaJogador(4);}
+}
+
+function clickColuna5(){
+    if(qntPecasColuna[5] >= 0){selecionaJogador(5);}
+}
+
+function clickColuna6(){
+    if(qntPecasColuna[6] >= 0){selecionaJogador(6);}
+}
+
+function selecionaJogador(coluna){
+    if(jogadorAtual === -1){ // vez do jogador
+        var div = document.getElementById("#posicao0-"+coluna);
+        div.animate({bottom: '10px'}, "slow");
+
+        document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
+        qntPecasColuna[coluna]--;
+        document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
+        document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
+    }else{ // vez da IA
+
+        document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#8b0000";
+        qntPecasColuna[coluna]--;
+        document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
+        document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
+    }
+    jogadorAtual = (this.jogadorAtual === -1) ? 1 : -1;
+}
