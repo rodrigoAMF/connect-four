@@ -179,6 +179,10 @@ function fimJogo(vencedor){ // -1 jogado | 1 IA | 0 empate
 
 }
 
- $("#btnInicio").on("click",function(e){ 
+ $("#btnInicio").on("click",function(e){
    window.location.href = "index.html";
+});
+
+$("#btnRestart").on("click",function(e){
+  window.location.href = "game.html";
 });
