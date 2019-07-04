@@ -93,7 +93,4 @@ function selecionaJogador(coluna){
         div.removeAttr('style');
         jogadorAtual = (jogadorAtual === -1) ? 1 : -1;
     });
-
-    console.log(colunasJogadas);
-
 }
