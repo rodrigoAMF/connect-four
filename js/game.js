@@ -4,6 +4,7 @@ var qntPecasColuna = [5,5,5,5,5,5,5];
 var continua;
 let fimAnimacao = false;
 let colunasJogadas = "";
+let fimDeJogo = false;
 let dificuldade = localStorage.getItem("dificuldade");
 
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
@@ -68,7 +69,10 @@ function clickColuna6(){
 
 
 function efetuarJogada(coluna){
-    if(jogadorAtual !== 1) return;
+    if(jogadorAtual !== 1 || fimDeJogo) {
+        console.log("Entrei");
+        return false;
+    }
     // Efetua jogada jogador
     fimAnimacao = false;
     animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
@@ -78,22 +82,60 @@ function efetuarJogada(coluna){
     qntPecasColuna[coluna]--;
     jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
 
-    // # Efetua jogada IA
-    const url = "http://localhost:5000?jogadas=" + colunasJogadas.toString()
+    let urlVerificarVencedor = "http://localhost:5000/verifica_vencedor?jogadas=" + colunasJogadas.toString();
+
+    $.getJSON(urlVerificarVencedor, function(data){
+        vencedor = parseInt(data.vencedor);
+        if(vencedor !== 0){
+            if(vencedor === 1){
+                alert("Jogador Venceu!");
+            }else{
+                alert("IA Venceu");
+            }
+            fimDeJogo = true;
+        }
+
+        if(fimDeJogo)
+            return false;
+
+        // # Efetua jogada IA
+        const urlJogadaIA= "http://localhost:5000?jogadas=" + colunasJogadas.toString()
             + "&dificuldade=3";
 
-    $.getJSON(url, function(data){
-        console.log(data);
-        coluna = data.melhor_coluna_para_jogar;
-        fimAnimacao = false;
-        animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
-        while(!fimAnimacao);
+        $.getJSON(urlJogadaIA, function(data){
+            if(fimDeJogo) return false;
+            console.log(data);
+            coluna = data.melhor_coluna_para_jogar;
+            fimAnimacao = false;
+            animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
+            while(!fimAnimacao);
 
-        colunasJogadas += coluna;
-        qntPecasColuna[coluna]--;
-        jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
+            colunasJogadas += coluna;
+            qntPecasColuna[coluna]--;
+            jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
+
+            urlVerificarVencedor = "http://localhost:5000/verifica_vencedor?jogadas=" + colunasJogadas.toString();
+
+            $.getJSON(urlVerificarVencedor, function(data){
+                console.log(data);
+                if(fimDeJogo) return false;
+                console.log("passsei!");
+                vencedor = parseInt(data.vencedor);
+                if(vencedor !== 0){
+                    if(vencedor === 1){
+                        alert("Jogador Venceu!");
+                    }else{
+                        alert("IA Venceu");
+                    }
+                    fimDeJogo = true;
+                }
+            });
+        });
     });
 
+
+
+    return true;
 
 }
 
