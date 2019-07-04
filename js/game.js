@@ -97,6 +97,9 @@ function efetuarJogada(coluna){
                 fimJogo(1);
             }
             fimDeJogo = true;
+        }else if(colunasJogadas.length === 42){
+            fimJogo(0);
+            fimDeJogo = true;
         }
 
         if(fimDeJogo)
@@ -129,6 +132,9 @@ function efetuarJogada(coluna){
                     }else{
                         fimJogo(1);
                     }
+                    fimDeJogo = true;
+                }else if(colunasJogadas.length === 42){
+                    fimJogo(0);
                     fimDeJogo = true;
                 }
             });
@@ -169,9 +175,9 @@ function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
 
 function fimJogo(vencedor){ // -1 jogado | 1 IA | 0 empate
     $('#exampleModal').modal({keyboard: false});
-    if (vencedor == -1) {
+    if (vencedor === -1) {
         document.getElementById("voceGanhou").style.display = 'block';
-    } else if (vencedor == 0){
+    } else if (vencedor === 0){
         document.getElementById("voceEmpatou").style.display = 'block';
     } else {
         document.getElementById("vocePerdeu").style.display = 'block';
