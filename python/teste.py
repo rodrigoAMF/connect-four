@@ -7,17 +7,8 @@ def printa():
 
 
 jogo = QuatroEmLinha()
-jogo.estado_atual.carrega_sequencia_jogadas("6146", 1)
-#printa()
-#jogo.estado_atual.eh_jogada_vitoriosa(2)
-'''jogo.estado_atual.jogar(0)
-jogo.estado_atual.jogar(0)
-jogo.estado_atual.jogar(0)
-jogo.estado_atual.jogar(0)
-jogo.estado_atual.jogar(0)
-jogo.estado_atual.jogar(0)
-jogo.estado_atual.desfazer_jogada()
+jogo.estado_atual.carrega_sequencia_jogadas("675747", 1)
 
 jogo.printa_bits((jogo.estado_atual.tabuleiro[0] ^ jogo.estado_atual.tabuleiro[1]) & jogo.estado_atual.top_mask(0))
-'''
-pontuacao, coluna_para_jogar = jogo.encontrar_solucao()
+
+pontuacao, coluna_para_jogar, responsavel_pela_jogada = jogo.encontrar_solucao()

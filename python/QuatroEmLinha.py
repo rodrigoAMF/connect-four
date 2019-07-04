@@ -15,18 +15,45 @@ class QuatroEmLinha:
             self.ordem_colunas[i] = int(self.estado_atual.largura_tabuleiro/2) + int(((1-(2*(i%2)))*(i+1))/2)
 
     def encontrar_solucao(self):
-        self.tempo_total = 0 # EXCLUIR
+        self.tempo_total = 0  # EXCLUIR
         start = time.time()
         self.nos_explorados = 0
 
         alfa = -int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro)/2)
         beta = int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro)/2)
-        melhor_pontuacao, coluna_melhor_pontuacao = self.negamax(self.estado_atual, alfa, beta)
+        melhor_pontuacao, melhor_coluna_para_jogar = self.negamax(self.estado_atual, alfa, beta)
 
         end = time.time()
         print(str(self.nos_explorados) + " Nós explorados em " + str(end - start) + " s")
 
-        return melhor_pontuacao, coluna_melhor_pontuacao
+        responsavel_pela_jogada = "negamax"
+
+        pontuacao_para_jogada_vencedora = int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro+1 - self.estado_atual.turno_atual) / 2)
+        # Se não for uma jogada vencedora
+        if melhor_pontuacao != pontuacao_para_jogada_vencedora:
+            self.estado_atual.turno_atual += 1
+
+            # Verifica se oponente tem chance de vencer na próxima jogada dele
+            for coluna in range(self.estado_atual.largura_tabuleiro):
+                if self.estado_atual.eh_possivel_jogar(coluna) and self.estado_atual.eh_jogada_vitoriosa(coluna):
+                    # Efetua jogada para impedir a vitória do jogador
+                    melhor_coluna_para_jogar = coluna
+                    break
+
+            self.estado_atual.turno_atual -= 1
+
+            responsavel_pela_jogada = "heuristica"
+
+        # Se ainda sim não encontrou uma coluna valida, jogada pelo centro
+        if melhor_coluna_para_jogar == -1:
+            for coluna in range(self.estado_atual.largura_tabuleiro):
+                if self.estado_atual.eh_possivel_jogar(self.ordem_colunas[coluna]):
+                    melhor_coluna_para_jogar = self.ordem_colunas[coluna]
+                    break
+
+            responsavel_pela_jogada = "heuristica"
+
+        return melhor_pontuacao, melhor_coluna_para_jogar, responsavel_pela_jogada
 
     # Retorna pontuacao e melhor coluna para se jogar
     def negamax(self, estado, alfa, beta, nivel=1, nivel_max=True):
@@ -70,7 +97,6 @@ class QuatroEmLinha:
                     coluna_melhor_pontuacao = coluna
 
         return alfa, coluna_melhor_pontuacao
-
 
     def printa_bits(self, bits):
         bits_string = '{0:048b}'.format(bits)

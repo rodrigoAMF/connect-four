@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS
 import json
-import numpy as np
 from QuatroEmLinha import QuatroEmLinha
 
 app = Flask(__name__)
@@ -20,10 +19,11 @@ def index():
 
     jogo.estado_atual.carrega_sequencia_jogadas(jogadas)
 
-    pontuacao, coluna = jogo.encontrar_solucao()
+    pontuacao, melhor_coluna_para_jogar, responsavel_pela_jogada = jogo.encontrar_solucao()
 
-    json_obj['pontuacao'] = pontuacao
-    json_obj['coluna'] = coluna
+    json_obj['pontuacao'] = str(pontuacao)
+    json_obj['melhor_coluna_para_jogar'] = str(melhor_coluna_para_jogar)
+    json_obj['responsavel_pela_jogada'] = responsavel_pela_jogada
 
     return json.dumps(json_obj)
 
