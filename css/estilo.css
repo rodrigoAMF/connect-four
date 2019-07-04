@@ -1,6 +1,11 @@
 /*Estilos necessario para todas as páginas */
 body{
+	background-color: #ffdbc5;
 	background-image: url("../img/fundo.png");
+	background-repeat: repeat-x;
+	background-size: contain;
+	background-attachment: fixed;
+	background-position: center bottom;
 }
 
 .fundo{
