@@ -34,7 +34,7 @@ body{
 }
 
 #voceEmpatou{
-	//display: none;
+	display: none;
 	color: blue;
 	margin-top: 30px;
 }
@@ -51,12 +51,12 @@ body{
 	margin-top: 40px;
 }
 
-.btnInicio{
+#btnInicio{
 	margin-left: auto;
 	margin-right: 60px;
 }
 
-.btnRestart{
+#btnRestart{
 	margin-right: auto;
 }
 

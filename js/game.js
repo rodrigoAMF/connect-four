@@ -7,6 +7,10 @@ let colunasJogadas = "";
 let fimDeJogo = false;
 let dificuldade = sessionStorage.getItem("dificuldade");
 
+document.getElementById("voceGanhou").style.display = 'none';
+document.getElementById("voceEmpatou").style.display = 'none';
+document.getElementById("vocePerdeu").style.display = 'none';
+
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
 
@@ -88,9 +92,9 @@ function efetuarJogada(coluna){
         vencedor = parseInt(data.vencedor);
         if(vencedor !== 0){
             if(vencedor === 1){
-                alert("Jogador Venceu!");
+                fimJogo(-1);
             }else{
-                alert("IA Venceu");
+                fimJogo(1);
             }
             fimDeJogo = true;
         }
@@ -121,9 +125,9 @@ function efetuarJogada(coluna){
                 vencedor = parseInt(data.vencedor);
                 if(vencedor !== 0){
                     if(vencedor === 1){
-                        alert("Jogador Venceu!");
+                        fimJogo(-1);
                     }else{
-                        alert("IA Venceu");
+                        fimJogo(1);
                     }
                     fimDeJogo = true;
                 }
@@ -162,3 +166,19 @@ function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
     });
     fimAnimacao = true;*/
 }
+
+function fimJogo(vencedor){ // -1 jogado | 1 IA | 0 empate
+    $('#exampleModal').modal({keyboard: false});
+    if (vencedor == -1) {
+        document.getElementById("voceGanhou").style.display = 'block';
+    } else if (vencedor == 0){
+        document.getElementById("voceEmpatou").style.display = 'block';
+    } else {
+        document.getElementById("vocePerdeu").style.display = 'block';
+    }
+
+}
+
+ $("#btnInicio").on("click",function(e){ 
+   window.location.href = "index.html";
+});
