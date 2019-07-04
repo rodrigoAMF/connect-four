@@ -6,7 +6,6 @@ let fimAnimacao = false;
 let colunasJogadas = "";
 let fimDeJogo = false;
 let dificuldade = sessionStorage.getItem("dificuldade");
-alert(dificuldade);
 
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
@@ -75,9 +74,9 @@ function efetuarJogada(coluna){
         return false;
     }
     // Efetua jogada jogador
-    fimAnimacao = false;
+    //fimAnimacao = false;
     animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
-    while(!fimAnimacao);
+    //while(!fimAnimacao);
 
     colunasJogadas += coluna;
     qntPecasColuna[coluna]--;
@@ -107,9 +106,9 @@ function efetuarJogada(coluna){
             if(fimDeJogo) return false;
             console.log(data);
             coluna = data.melhor_coluna_para_jogar;
-            fimAnimacao = false;
+            //fimAnimacao = false;
             animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
-            while(!fimAnimacao);
+            //while(!fimAnimacao);
 
             colunasJogadas += coluna;
             qntPecasColuna[coluna]--;
@@ -118,9 +117,7 @@ function efetuarJogada(coluna){
             urlVerificarVencedor = "http://localhost:5000/verifica_vencedor?jogadas=" + colunasJogadas.toString();
 
             $.getJSON(urlVerificarVencedor, function(data){
-                console.log(data);
                 if(fimDeJogo) return false;
-                console.log("passsei!");
                 vencedor = parseInt(data.vencedor);
                 if(vencedor !== 0){
                     if(vencedor === 1){
@@ -134,14 +131,12 @@ function efetuarJogada(coluna){
         });
     });
 
-
-
     return true;
 
 }
 
 function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
-    document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "block";
+    /*document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "block";
 
     if(jogadorAtual === 1){ // vez do jogador
         document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#008b8b";
@@ -151,8 +146,8 @@ function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
 
     var div = $(".bolinhaDesce"+coluna);
     desloca = (14*(6*(5-qtdPecasColuna)));
-
-    div.animate({bottom: desloca +'px'}, 800, "linear", function() {
+    */
+    //div.animate({bottom: desloca +'px'}, 800, "linear", function() {
         if(jogadorAtual === 1){ // vez do jogador
             document.getElementById("posicao"+qtdPecasColuna+"-"+coluna).style.backgroundColor  = "#008b8b";
             document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
@@ -162,8 +157,8 @@ function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
             document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
             document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
         }
-        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "none";
+        /*document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "none";
         div.removeAttr('style');
     });
-    fimAnimacao = true;
+    fimAnimacao = true;*/
 }
