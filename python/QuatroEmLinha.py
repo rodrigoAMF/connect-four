@@ -5,9 +5,9 @@ import numpy as np
 
 
 class QuatroEmLinha:
-    def __init__(self):
+    def __init__(self, nivel_maximo_busca=11):
         self.estado_atual = Estado()
-        self.nivel_maximo_busca = 11
+        self.nivel_maximo_busca = nivel_maximo_busca
         self.nos_explorados = 0
         # Ordem de exploração das colunas
         self.ordem_colunas = np.zeros(self.estado_atual.largura_tabuleiro, dtype=int)

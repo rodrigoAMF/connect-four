@@ -4,6 +4,8 @@ var qntPecasColuna = [5,5,5,5,5,5,5];
 var continua;
 let fimAnimacao = false;
 let colunasJogadas = "";
+let dificuldade = localStorage.getItem("dificuldade");
+
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
 

@@ -64,6 +64,13 @@ class Estado:
 
         return vitoria
 
+    def verifica_vencedor(self, coluna):
+        jogador_atual = (self.turno_atual & 1) + 1
+        if self.eh_jogada_vitoriosa(coluna):
+            return jogador_atual
+
+        return 0
+
     # Testa se ocorreu alinhamento de 4 peças no tabuleiro do jogador atual
     def alinhamento(self, tabuleiro):
         # Horizontal
