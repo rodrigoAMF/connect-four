@@ -9,22 +9,23 @@ app = Flask(__name__)
 CORS(app)
 
 
-
 @app.route('/', methods=['GET'])
 def index():
-    jogo = QuatroEmLinha()
-    jsonObj = {}
+    json_obj = {}
 
     jogadas = request.args.get('jogadas')
+    dificuldade = request.args.get('dificuldade')
+
+    jogo = QuatroEmLinha()
 
     jogo.estado_atual.carrega_sequencia_jogadas(jogadas)
 
     pontuacao, coluna = jogo.encontrar_solucao()
 
-    jsonObj['pontuacao'] = pontuacao
-    jsonObj['coluna'] = coluna
+    json_obj['pontuacao'] = pontuacao
+    json_obj['coluna'] = coluna
 
-    return json.dumps(jsonObj)
+    return json.dumps(json_obj)
 
 '''
 @app.route('/vencedor', methods=['GET'])
