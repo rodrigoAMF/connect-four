@@ -21,8 +21,8 @@ def index():
 
     pontuacao, melhor_coluna_para_jogar, responsavel_pela_jogada = jogo.encontrar_solucao()
 
-    json_obj['pontuacao'] = pontuacao
-    json_obj['melhor_coluna_para_jogar'] = melhor_coluna_para_jogar
+    json_obj['pontuacao'] = str(pontuacao)
+    json_obj['melhor_coluna_para_jogar'] = str(melhor_coluna_para_jogar)
     json_obj['responsavel_pela_jogada'] = responsavel_pela_jogada
 
     return json.dumps(json_obj)

@@ -64,16 +64,6 @@ class Estado:
 
         return vitoria
 
-        '''bitboard = self.tabuleiro[self.turno_atual & 1]
-        direcoes = [1, 7, 6, 8]
-
-        for direcao in direcoes:
-            bitboard_aux = bitboard & (bitboard >> direcao)
-            if bitboard_aux & (bitboard_aux >> (2 * direcao)) != 0:
-                return True
-
-        return False'''
-
     # Testa se ocorreu alinhamento de 4 peças no tabuleiro do jogador atual
     def alinhamento(self, tabuleiro):
         # Horizontal

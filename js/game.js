@@ -66,6 +66,7 @@ function clickColuna6(){
 
 
 function efetuarJogada(coluna){
+    if(jogadorAtual !== 1) return;
     // Efetua jogada jogador
     fimAnimacao = false;
     animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
@@ -79,10 +80,16 @@ function efetuarJogada(coluna){
     const url = "http://localhost:5000?jogadas=" + colunasJogadas.toString()
             + "&dificuldade=3";
 
-    console.log(url);
-
     $.getJSON(url, function(data){
-        console.log(data)
+        console.log(data);
+        coluna = data.melhor_coluna_para_jogar;
+        fimAnimacao = false;
+        animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
+        while(!fimAnimacao);
+
+        colunasJogadas += coluna;
+        qntPecasColuna[coluna]--;
+        jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
     });
 
 

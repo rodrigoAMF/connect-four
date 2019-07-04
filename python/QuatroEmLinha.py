@@ -7,7 +7,7 @@ import numpy as np
 class QuatroEmLinha:
     def __init__(self):
         self.estado_atual = Estado()
-        self.nivel_maximo_busca = 12
+        self.nivel_maximo_busca = 11
         self.nos_explorados = 0
         # Ordem de exploração das colunas
         self.ordem_colunas = np.zeros(self.estado_atual.largura_tabuleiro, dtype=int)
@@ -15,7 +15,7 @@ class QuatroEmLinha:
             self.ordem_colunas[i] = int(self.estado_atual.largura_tabuleiro/2) + int(((1-(2*(i%2)))*(i+1))/2)
 
     def encontrar_solucao(self):
-        self.tempo_total = 0 # EXCLUIR
+        self.tempo_total = 0  # EXCLUIR
         start = time.time()
         self.nos_explorados = 0
 
@@ -28,24 +28,28 @@ class QuatroEmLinha:
 
         responsavel_pela_jogada = "negamax"
 
-        # Não encontrou uma jogada boa
-        if melhor_coluna_para_jogar == -1:
+        pontuacao_para_jogada_vencedora = int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro+1 - self.estado_atual.turno_atual) / 2)
+        # Se não for uma jogada vencedora
+        if melhor_pontuacao != pontuacao_para_jogada_vencedora:
             self.estado_atual.turno_atual += 1
 
-            # Verifica se oponente tem chance de vencer na próxima jogada
+            # Verifica se oponente tem chance de vencer na próxima jogada dele
             for coluna in range(self.estado_atual.largura_tabuleiro):
                 if self.estado_atual.eh_possivel_jogar(coluna) and self.estado_atual.eh_jogada_vitoriosa(coluna):
+                    # Efetua jogada para impedir a vitória do jogador
                     melhor_coluna_para_jogar = coluna
                     break
 
             self.estado_atual.turno_atual -= 1
 
-            # Se ainda sim não encontrou uma coluna valida, jogada pelo centro
-            if melhor_coluna_para_jogar == -1:
-                for coluna in range(self.estado_atual.largura_tabuleiro):
-                    if self.estado_atual.eh_possivel_jogar(self.ordem_colunas[coluna]):
-                        melhor_coluna_para_jogar = self.ordem_colunas[coluna]
-                        break
+            responsavel_pela_jogada = "heuristica"
+
+        # Se ainda sim não encontrou uma coluna valida, jogada pelo centro
+        if melhor_coluna_para_jogar == -1:
+            for coluna in range(self.estado_atual.largura_tabuleiro):
+                if self.estado_atual.eh_possivel_jogar(self.ordem_colunas[coluna]):
+                    melhor_coluna_para_jogar = self.ordem_colunas[coluna]
+                    break
 
             responsavel_pela_jogada = "heuristica"
 
@@ -93,7 +97,6 @@ class QuatroEmLinha:
                     coluna_melhor_pontuacao = coluna
 
         return alfa, coluna_melhor_pontuacao
-
 
     def printa_bits(self, bits):
         bits_string = '{0:048b}'.format(bits)
