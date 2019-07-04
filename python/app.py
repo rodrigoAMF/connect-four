@@ -8,41 +8,43 @@ from QuatroEmLinha import QuatroEmLinha
 app = Flask(__name__)
 CORS(app)
 
-def encontrar_melhor_jogada(tabuleiro):
-    posicao_jogada = np.random.randint(tabuleiro.shape[1])
 
-    while tabuleiro[0][posicao_jogada] != 0:
-        posicao_jogada = np.random.randint(tabuleiro.shape[1])
-
-    return posicao_jogada
-
-
-@app.route('/', methods=['GET', 'POST'])
-
+@app.route('/', methods=['GET'])
 def index():
+    json_obj = {}
+
+    jogadas = request.args.get('jogadas')
+    dificuldade = request.args.get('dificuldade')
+
+    jogo = QuatroEmLinha()
+
+    jogo.estado_atual.carrega_sequencia_jogadas(jogadas)
+
+    pontuacao, coluna = jogo.encontrar_solucao()
+
+    json_obj['pontuacao'] = pontuacao
+    json_obj['coluna'] = coluna
+
+    return json.dumps(json_obj)
+
+'''
+@app.route('/vencedor', methods=['GET'])
+def index():
+    jogo = QuatroEmLinha()
     jsonObj = {}
-    jsonObj['status'] = 200
 
-    tamanho_tabuleiro = request.args.get('tamanho_tabuleiro')
-    tabuleiro = request.args.get('tabuleiro')
-    if tamanho_tabuleiro is None or tabuleiro is None:
-        jsonObj['status'] = 500
-        jsonObj['errorMsg'] = "Os parametros tamanho_tabuleiro e tabuleiro sao obrigatorios!"
-        return json.dumps(jsonObj)
+    jogadas = request.args.get('jogadas')
 
-    tamanho_tabuleiro = np.array(tamanho_tabuleiro.split(",")).astype(np.int)
-    tabuleiro = np.array(tabuleiro.split(",")).astype(np.int)
+    jogo.estado_atual.carrega_sequencia_jogadas(jogadas)
 
-    if tabuleiro.shape[0] != tamanho_tabuleiro[0]*tamanho_tabuleiro[1]:
-        jsonObj['status'] = 500
-        jsonObj['errorMsg'] = "Os valores de tamanho_tabuleiro nao batem com o do tabuleiro passado"
-        return json.dumps(jsonObj)
+    # TODO: retornar vencedor certo
+    vencedor = jogo.estado_atual.eh_jogada_vitoriosa()
 
-    tabuleiro = tabuleiro.reshape(tamanho_tabuleiro)
-
-    jsonObj['melhorColunaParaJogar'] = encontrar_melhor_jogada(tabuleiro)
+    # TODO: dizer quem venceu
+    jsonObj['vencedor'] = vencedor
 
     return json.dumps(jsonObj)
+'''
 
 if __name__ == "__main__":
     app.run()
