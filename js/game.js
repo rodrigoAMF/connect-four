@@ -1,13 +1,14 @@
 adicionaClick();
-var jogadorAtual = -1;  // -1 jogador | 1 IA
+var jogadorAtual = 1;  // 1 jogador | 2 IA
 var qntPecasColuna = [5,5,5,5,5,5,5];
 var continua;
+let fimAnimacao = false;
 var colunasJogadas = [];
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
 
 //Adiciona efeito de click em todas as div e seleciona a coluna
-function adicionaClick(){
+function adicionaClick() {
   let divName = "";
   for(let i=0; i < 7; i++) {
       for (let j=0; j < 6; j++) {
@@ -36,64 +37,77 @@ function adicionaClick(){
 
 
 function clickColuna0(){
-    if(qntPecasColuna[0] >= 0){selecionaJogador(0);}
+    if(qntPecasColuna[0] >= 0){efetuarJogada(0);}
 }
 
 function clickColuna1(){
-    if(qntPecasColuna[1] >= 0){selecionaJogador(1);}
+    if(qntPecasColuna[1] >= 0){efetuarJogada(1);}
 }
 
 function clickColuna2(){
-    if(qntPecasColuna[2] >= 0){selecionaJogador(2);}
+    if(qntPecasColuna[2] >= 0){efetuarJogada(2);}
 }
 
 function clickColuna3(){
-    if(qntPecasColuna[3] >= 0){selecionaJogador(3);}
+    if(qntPecasColuna[3] >= 0){efetuarJogada(3);}
 }
 
 function clickColuna4(){
-    if(qntPecasColuna[4] >= 0){selecionaJogador(4);}
+    if(qntPecasColuna[4] >= 0){efetuarJogada(4);}
 }
 
 function clickColuna5(){
-    if(qntPecasColuna[5] >= 0){selecionaJogador(5);}
+    if(qntPecasColuna[5] >= 0){efetuarJogada(5);}
 }
 
 function clickColuna6(){
-    if(qntPecasColuna[6] >= 0){selecionaJogador(6);}
+    if(qntPecasColuna[6] >= 0){efetuarJogada(6);}
 }
 
 
-function selecionaJogador(coluna){
+function efetuarJogada(coluna){
+    fimAnimacao = false;
+    animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
+    while(!fimAnimacao);
+
+    const url = "http://localhost:5000?jogadas=" + colunasJogadas.toString()
+            + "&dificuldade=3";
+
+    $.getJSON(url, function(data){
+        console.log(data)
+    });
+
+    colunasJogadas.push(coluna);
+    qntPecasColuna[coluna]--;
+    jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
+
+
+}
+
+function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
     document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "block";
 
-    if(jogadorAtual === -1){ // vez do jogador
-      document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#008b8b";
+    if(jogadorAtual === 1){ // vez do jogador
+        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#008b8b";
     }else{
-      document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#8b0000";
+        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#8b0000";
     }
 
     var div = $(".bolinhaDesce"+coluna);
-    desloca = (14*(6*(5-qntPecasColuna[coluna])))
+    desloca = (14*(6*(5-qtdPecasColuna)));
 
     div.animate({bottom: desloca +'px'}, 800, "linear", function() {
-        colunasJogadas.push(coluna);
-        if(jogadorAtual === -1){ // vez do jogador
-          document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#008b8b";
-          qntPecasColuna[coluna]--;
-          document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
-          document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
+        if(jogadorAtual === 1){ // vez do jogador
+            document.getElementById("posicao"+qtdPecasColuna+"-"+coluna).style.backgroundColor  = "#008b8b";
+            document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
+            document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
         } else {
-          document.getElementById("posicao"+qntPecasColuna[coluna]+"-"+coluna).style.backgroundColor  = "#8b0000";
-          qntPecasColuna[coluna]--;
-          document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
-          document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
+            document.getElementById("posicao"+qtdPecasColuna+"-"+coluna).style.backgroundColor  = "#8b0000";
+            document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
+            document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
         }
         document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "none";
         div.removeAttr('style');
-        jogadorAtual = (jogadorAtual === -1) ? 1 : -1;
     });
-
-    console.log(colunasJogadas);
-
+    fimAnimacao = true;
 }

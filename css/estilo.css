@@ -78,19 +78,15 @@ a:hover{
 	margin-left: 10px;
 }
 
-.line-0{
-	margin-top: 5px;
-}
-
-.linha {
+.peca {
 	background: white;
-	//background-image: url("../img/fundo.png");
-  float: left;
-  width: 80px;
-  height: 80px;
-  border: 2px solid #000;
-  border-radius: 60px;
-  margin: 2px;
+	/*background-image: url("../img/fundo.png");*/
+	float: left;
+	width: 80px;
+	height: 80px;
+	border: 2px solid #000;
+	border-radius: 60px;
+	margin: 2px;
 	cursor: pointer;
 	z-index: 5;
 }
