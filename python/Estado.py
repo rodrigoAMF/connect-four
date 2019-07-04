@@ -34,7 +34,7 @@ class Estado:
         self.posicao_proximas_jogadas[coluna] -= 1
         self.tabuleiro[self.turno_atual & 1] ^= jogada
 
-    def carrega_sequencia_jogadas(self, sequencia, sub=1):
+    def carrega_sequencia_jogadas(self, sequencia, sub=0):
         for i in range(len(sequencia)):
             coluna = int(sequencia[i]) - sub
             if (coluna < 0
@@ -48,6 +48,7 @@ class Estado:
 
     def eh_jogada_vitoriosa(self, coluna):
         self.jogar(coluna)
+
         bitboard = self.tabuleiro[not (self.turno_atual & 1)]
         vitoria = False
         if bitboard & (bitboard >> 6) & (bitboard >> 12) & (bitboard >> 18) != 0:
@@ -96,9 +97,6 @@ class Estado:
             return True
 
         return False
-
-    def chave(self):
-        return self.tabuleiro + self.mascara
 
     # retorna uma bitmask com um único 1 correspondente a posição do topo de uma dada coluna
     def top_mask(self, coluna):

@@ -3,7 +3,7 @@ var jogadorAtual = 1;  // 1 jogador | 2 IA
 var qntPecasColuna = [5,5,5,5,5,5,5];
 var continua;
 let fimAnimacao = false;
-var colunasJogadas = [];
+let colunasJogadas = "";
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
 
@@ -66,20 +66,24 @@ function clickColuna6(){
 
 
 function efetuarJogada(coluna){
+    // Efetua jogada jogador
     fimAnimacao = false;
     animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
     while(!fimAnimacao);
 
+    colunasJogadas += coluna;
+    qntPecasColuna[coluna]--;
+    jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
+
+    // # Efetua jogada IA
     const url = "http://localhost:5000?jogadas=" + colunasJogadas.toString()
             + "&dificuldade=3";
+
+    console.log(url);
 
     $.getJSON(url, function(data){
         console.log(data)
     });
-
-    colunasJogadas.push(coluna);
-    qntPecasColuna[coluna]--;
-    jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
 
 
 }

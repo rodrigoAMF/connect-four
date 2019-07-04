@@ -7,7 +7,7 @@ import numpy as np
 class QuatroEmLinha:
     def __init__(self):
         self.estado_atual = Estado()
-        self.nivel_maximo_busca = 11
+        self.nivel_maximo_busca = 12
         self.nos_explorados = 0
         # Ordem de exploração das colunas
         self.ordem_colunas = np.zeros(self.estado_atual.largura_tabuleiro, dtype=int)
@@ -21,12 +21,35 @@ class QuatroEmLinha:
 
         alfa = -int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro)/2)
         beta = int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro)/2)
-        melhor_pontuacao, coluna_melhor_pontuacao = self.negamax(self.estado_atual, alfa, beta)
+        melhor_pontuacao, melhor_coluna_para_jogar = self.negamax(self.estado_atual, alfa, beta)
 
         end = time.time()
         print(str(self.nos_explorados) + " Nós explorados em " + str(end - start) + " s")
 
-        return melhor_pontuacao, coluna_melhor_pontuacao
+        responsavel_pela_jogada = "negamax"
+
+        # Não encontrou uma jogada boa
+        if melhor_coluna_para_jogar == -1:
+            self.estado_atual.turno_atual += 1
+
+            # Verifica se oponente tem chance de vencer na próxima jogada
+            for coluna in range(self.estado_atual.largura_tabuleiro):
+                if self.estado_atual.eh_possivel_jogar(coluna) and self.estado_atual.eh_jogada_vitoriosa(coluna):
+                    melhor_coluna_para_jogar = coluna
+                    break
+
+            self.estado_atual.turno_atual -= 1
+
+            # Se ainda sim não encontrou uma coluna valida, jogada pelo centro
+            if melhor_coluna_para_jogar == -1:
+                for coluna in range(self.estado_atual.largura_tabuleiro):
+                    if self.estado_atual.eh_possivel_jogar(self.ordem_colunas[coluna]):
+                        melhor_coluna_para_jogar = self.ordem_colunas[coluna]
+                        break
+
+            responsavel_pela_jogada = "heuristica"
+
+        return melhor_pontuacao, melhor_coluna_para_jogar, responsavel_pela_jogada
 
     # Retorna pontuacao e melhor coluna para se jogar
     def negamax(self, estado, alfa, beta, nivel=1, nivel_max=True):
