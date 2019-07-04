@@ -1,6 +1,3 @@
-import numpy as np
-
-
 class Estado:
     def __init__(self):
         self.altura_tabuleiro = 6   # Altura do tabuleiro

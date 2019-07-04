@@ -105,6 +105,8 @@ function efetuarJogada(coluna){
         if(fimDeJogo)
             return false;
 
+        console.log("Jogadas antes da IA jogar: " + colunasJogadas);
+
         // # Efetua jogada IA
         const urlJogadaIA= "http://localhost:5000?jogadas=" + colunasJogadas.toString()
             + "&dificuldade=" + dificuldade;

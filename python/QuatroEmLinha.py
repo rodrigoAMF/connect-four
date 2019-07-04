@@ -1,7 +1,5 @@
 from Estado import Estado
-import copy
 import time
-import numpy as np
 
 
 class QuatroEmLinha:
@@ -10,12 +8,11 @@ class QuatroEmLinha:
         self.nivel_maximo_busca = nivel_maximo_busca
         self.nos_explorados = 0
         # Ordem de exploração das colunas
-        self.ordem_colunas = np.zeros(self.estado_atual.largura_tabuleiro, dtype=int)
+        self.ordem_colunas = []
         for i in range(self.estado_atual.largura_tabuleiro):
-            self.ordem_colunas[i] = int(self.estado_atual.largura_tabuleiro/2) + int(((1-(2*(i%2)))*(i+1))/2)
+            self.ordem_colunas.append(int(self.estado_atual.largura_tabuleiro/2) + int(((1-(2*(i%2)))*(i+1))/2))
 
     def encontrar_solucao(self):
-        self.tempo_total = 0  # EXCLUIR
         start = time.time()
         self.nos_explorados = 0
 
@@ -31,6 +28,7 @@ class QuatroEmLinha:
         pontuacao_para_jogada_vencedora = int((self.estado_atual.largura_tabuleiro*self.estado_atual.altura_tabuleiro+1 - self.estado_atual.turno_atual) / 2)
         # Se não for uma jogada vencedora
         if melhor_pontuacao != pontuacao_para_jogada_vencedora:
+            #print("Não eh pontuacao vencedora " + str(melhor_coluna_para_jogar))
             self.estado_atual.turno_atual += 1
 
             # Verifica se oponente tem chance de vencer na próxima jogada dele
@@ -38,20 +36,22 @@ class QuatroEmLinha:
                 if self.estado_atual.eh_possivel_jogar(coluna) and self.estado_atual.eh_jogada_vitoriosa(coluna):
                     # Efetua jogada para impedir a vitória do jogador
                     melhor_coluna_para_jogar = coluna
+                    responsavel_pela_jogada = "heuristica"
+                    #print("Oponente vence")
                     break
 
             self.estado_atual.turno_atual -= 1
 
-            responsavel_pela_jogada = "heuristica"
-
         # Se ainda sim não encontrou uma coluna valida, jogada pelo centro
-        if melhor_coluna_para_jogar == -1:
+        if melhor_coluna_para_jogar == -1 or not self.estado_atual.eh_possivel_jogar(melhor_coluna_para_jogar):
             for coluna in range(self.estado_atual.largura_tabuleiro):
+                #print(str(type(self.ordem_colunas[coluna])))
+                #print(str(self.ordem_colunas[coluna]) + " ehPossivel: " + str(self.estado_atual.eh_possivel_jogar(self.ordem_colunas[coluna])))
                 if self.estado_atual.eh_possivel_jogar(self.ordem_colunas[coluna]):
                     melhor_coluna_para_jogar = self.ordem_colunas[coluna]
+                    responsavel_pela_jogada = "heuristica"
+                    #print("Jogada aleatória pelo centro")
                     break
-
-            responsavel_pela_jogada = "heuristica"
 
         return melhor_pontuacao, melhor_coluna_para_jogar, responsavel_pela_jogada
 

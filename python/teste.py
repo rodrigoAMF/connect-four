@@ -7,7 +7,7 @@ def printa():
 
 
 jogo = QuatroEmLinha()
-jogo.estado_atual.carrega_sequencia_jogadas("675747", 1)
+jogo.estado_atual.carrega_sequencia_jogadas("2323223230332444411414111")
 
 jogo.printa_bits((jogo.estado_atual.tabuleiro[0] ^ jogo.estado_atual.tabuleiro[1]) & jogo.estado_atual.top_mask(0))
 
