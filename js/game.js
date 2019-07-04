@@ -5,7 +5,8 @@ var continua;
 let fimAnimacao = false;
 let colunasJogadas = "";
 let fimDeJogo = false;
-let dificuldade = localStorage.getItem("dificuldade");
+let dificuldade = sessionStorage.getItem("dificuldade");
+alert(dificuldade);
 
 document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
