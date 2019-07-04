@@ -2,47 +2,74 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS
 import json
-import numpy as np
 from QuatroEmLinha import QuatroEmLinha
 
 app = Flask(__name__)
 CORS(app)
 
-def encontrar_melhor_jogada(tabuleiro):
-    posicao_jogada = np.random.randint(tabuleiro.shape[1])
 
-    while tabuleiro[0][posicao_jogada] != 0:
-        posicao_jogada = np.random.randint(tabuleiro.shape[1])
-
-    return posicao_jogada
-
-
-@app.route('/', methods=['GET', 'POST'])
-
+@app.route('/', methods=['GET'])
 def index():
+    json_obj = {}
+
+    jogadas = request.args.get('jogadas')
+    dificuldade = int(request.args.get('dificuldade'))
+
+    jogo = None
+    if dificuldade == 3:
+        # Difícil, explora 11 níveis
+        jogo = QuatroEmLinha()
+    elif dificuldade == 2:
+        # Difícil, explora 6 níveis
+        jogo = QuatroEmLinha(6)
+    else:
+        # Difícil, explora 3 níveis
+        jogo = QuatroEmLinha(3)
+
+    jogo.estado_atual.carrega_sequencia_jogadas(jogadas)
+
+    pontuacao, melhor_coluna_para_jogar, responsavel_pela_jogada = jogo.encontrar_solucao()
+
+    json_obj['pontuacao'] = str(pontuacao)
+    json_obj['melhor_coluna_para_jogar'] = str(melhor_coluna_para_jogar)
+    json_obj['responsavel_pela_jogada'] = responsavel_pela_jogada
+
+    return json.dumps(json_obj)
+
+
+@app.route('/verifica_vencedor', methods=['GET'])
+def verifica_vencedor():
+    json_obj = {}
+
+    jogadas = request.args.get('jogadas')
+
+    jogo = QuatroEmLinha()
+
+    jogo.estado_atual.carrega_sequencia_jogadas(jogadas[:-1])
+    vencedor = jogo.estado_atual.verifica_vencedor(int(jogadas[-1]))
+
+    json_obj['vencedor'] = vencedor
+
+    return json.dumps(json_obj)
+
+'''
+@app.route('/vencedor', methods=['GET'])
+def index():
+    jogo = QuatroEmLinha()
     jsonObj = {}
-    jsonObj['status'] = 200
 
-    tamanho_tabuleiro = request.args.get('tamanho_tabuleiro')
-    tabuleiro = request.args.get('tabuleiro')
-    if tamanho_tabuleiro is None or tabuleiro is None:
-        jsonObj['status'] = 500
-        jsonObj['errorMsg'] = "Os parametros tamanho_tabuleiro e tabuleiro sao obrigatorios!"
-        return json.dumps(jsonObj)
+    jogadas = request.args.get('jogadas')
 
-    tamanho_tabuleiro = np.array(tamanho_tabuleiro.split(",")).astype(np.int)
-    tabuleiro = np.array(tabuleiro.split(",")).astype(np.int)
+    jogo.estado_atual.carrega_sequencia_jogadas(jogadas)
 
-    if tabuleiro.shape[0] != tamanho_tabuleiro[0]*tamanho_tabuleiro[1]:
-        jsonObj['status'] = 500
-        jsonObj['errorMsg'] = "Os valores de tamanho_tabuleiro nao batem com o do tabuleiro passado"
-        return json.dumps(jsonObj)
+    # TODO: retornar vencedor certo
+    vencedor = jogo.estado_atual.eh_jogada_vitoriosa()
 
-    tabuleiro = tabuleiro.reshape(tamanho_tabuleiro)
-
-    jsonObj['melhorColunaParaJogar'] = encontrar_melhor_jogada(tabuleiro)
+    # TODO: dizer quem venceu
+    jsonObj['vencedor'] = vencedor
 
     return json.dumps(jsonObj)
+'''
 
 if __name__ == "__main__":
     app.run()

@@ -1,70 +1,168 @@
+adicionaClick();
+var jogadorAtual = 1;  // 1 jogador | 2 IA
+var qntPecasColuna = [5,5,5,5,5,5,5];
+var continua;
+let fimAnimacao = false;
+let colunasJogadas = "";
+let fimDeJogo = false;
+let dificuldade = localStorage.getItem("dificuldade");
 
-let jogo = QuatroEmLinha.getInstance();
+document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
 
-function geraTabuleiro(){
-    let tabuleiro = $(".tabuleiro");
-    let stringHTML = "";
-    for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
-        stringHTML += "<div class='linha line-" + i + "'>";
-        for (let j = 0; j < jogo.tamanhoTabuleiro[1]; j++) {
-            stringHTML += "<div id='posicao" + i + "-" + j + "'></div>";
-        }
-        stringHTML += "</div>";
-    }
 
-    tabuleiro.html(stringHTML);
+//Adiciona efeito de click em todas as div e seleciona a coluna
+function adicionaClick() {
+  let divName = "";
+  for(let i=0; i < 7; i++) {
+      for (let j=0; j < 6; j++) {
+          divName = "posicao" + j + "-" + i;
+          if (i === 0) {
+              document.getElementById(divName).addEventListener("click", clickColuna0);
+          } else if (i === 1) {
+              document.getElementById(divName).addEventListener("click", clickColuna1);
+          } else if (i === 2) {
+              document.getElementById(divName).addEventListener("click", clickColuna2);
+          } else if (i === 3) {
+              document.getElementById(divName).addEventListener("click", clickColuna3);
+          } else if (i === 4) {
+              document.getElementById(divName).addEventListener("click", clickColuna4);
+          } else if (i === 5) {
+              document.getElementById(divName).addEventListener("click", clickColuna5);
+          } else if (i === 6) {
+              document.getElementById(divName).addEventListener("click", clickColuna6);
+          } else if (i === 7) {
+              document.getElementById(divName).addEventListener("click", clickColuna7);
+          }
+
+      }
+  }
 }
 
-function bindClickColunas(){
-    let divName;
-    for(let i=0; i < jogo.tamanhoTabuleiro[0]; i++) {
-        for (let j=0; j < jogo.tamanhoTabuleiro[1]; j++) {
-            divName = "posicao" + i + "-" + j;
-            document.getElementById(divName).addEventListener("click", () => {
-                jogo.efetuarJogadaJogador(j);
-                jogo.efetuarJogadaIA();
+
+function clickColuna0(){
+    if(qntPecasColuna[0] >= 0){efetuarJogada(0);}
+}
+
+function clickColuna1(){
+    if(qntPecasColuna[1] >= 0){efetuarJogada(1);}
+}
+
+function clickColuna2(){
+    if(qntPecasColuna[2] >= 0){efetuarJogada(2);}
+}
+
+function clickColuna3(){
+    if(qntPecasColuna[3] >= 0){efetuarJogada(3);}
+}
+
+function clickColuna4(){
+    if(qntPecasColuna[4] >= 0){efetuarJogada(4);}
+}
+
+function clickColuna5(){
+    if(qntPecasColuna[5] >= 0){efetuarJogada(5);}
+}
+
+function clickColuna6(){
+    if(qntPecasColuna[6] >= 0){efetuarJogada(6);}
+}
+
+
+function efetuarJogada(coluna){
+    if(jogadorAtual !== 1 || fimDeJogo) {
+        console.log("Entrei");
+        return false;
+    }
+    // Efetua jogada jogador
+    fimAnimacao = false;
+    animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
+    while(!fimAnimacao);
+
+    colunasJogadas += coluna;
+    qntPecasColuna[coluna]--;
+    jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
+
+    let urlVerificarVencedor = "http://localhost:5000/verifica_vencedor?jogadas=" + colunasJogadas.toString();
+
+    $.getJSON(urlVerificarVencedor, function(data){
+        vencedor = parseInt(data.vencedor);
+        if(vencedor !== 0){
+            if(vencedor === 1){
+                alert("Jogador Venceu!");
+            }else{
+                alert("IA Venceu");
+            }
+            fimDeJogo = true;
+        }
+
+        if(fimDeJogo)
+            return false;
+
+        // # Efetua jogada IA
+        const urlJogadaIA= "http://localhost:5000?jogadas=" + colunasJogadas.toString()
+            + "&dificuldade=" + dificuldade;
+
+        $.getJSON(urlJogadaIA, function(data){
+            if(fimDeJogo) return false;
+            console.log(data);
+            coluna = data.melhor_coluna_para_jogar;
+            fimAnimacao = false;
+            animarJogada(coluna, jogadorAtual, qntPecasColuna[coluna]);
+            while(!fimAnimacao);
+
+            colunasJogadas += coluna;
+            qntPecasColuna[coluna]--;
+            jogadorAtual = (jogadorAtual === 1) ? 2 : 1;
+
+            urlVerificarVencedor = "http://localhost:5000/verifica_vencedor?jogadas=" + colunasJogadas.toString();
+
+            $.getJSON(urlVerificarVencedor, function(data){
+                console.log(data);
+                if(fimDeJogo) return false;
+                console.log("passsei!");
+                vencedor = parseInt(data.vencedor);
+                if(vencedor !== 0){
+                    if(vencedor === 1){
+                        alert("Jogador Venceu!");
+                    }else{
+                        alert("IA Venceu");
+                    }
+                    fimDeJogo = true;
+                }
             });
-        }
-    }
+        });
+    });
+
+
+
+    return true;
+
 }
 
-geraTabuleiro();
-bindClickColunas();
+function animarJogada(coluna, jogadorAtual, qtdPecasColuna){
+    document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "block";
 
-/*let start = performance.now();
+    if(jogadorAtual === 1){ // vez do jogador
+        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#008b8b";
+    }else{
+        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["background"] = "#8b0000";
+    }
 
-jogo.dfs(jogo.estadoAtual, true,1);
+    var div = $(".bolinhaDesce"+coluna);
+    desloca = (14*(6*(5-qtdPecasColuna)));
 
-let end = performance.now();
-let duration = (end - start)/(10**3);
-duration = duration.toFixed(2);
-
-alert("Finalizado execução da DFS com " + jogo.nivelMaximoDFS + " níveis de profundidade em " + duration + " segundos");
-*/
-
-/*
-let pai = new Estado();
-
-let filhos = pai.geraFilhos()[0].geraFilhos()[0].geraFilhos()[0].geraFilhos();
-
-console.log(filhos);
-
-
-
-let string = "1234567812345678123456781234567812345678123456781234567812345678";
-
-console.log(string);
-
-console.log(string[2]);
-
-string[2] = "5";
-
-console.log(string[2]);
-*/
-/*
-jogo.dfs(jogo.estadoAtual, 1);
-
-let melhor = jogo.estadoAtual.melhorJogada;
-
-console.log(melhor);
-*/
+    div.animate({bottom: desloca +'px'}, 800, "linear", function() {
+        if(jogadorAtual === 1){ // vez do jogador
+            document.getElementById("posicao"+qtdPecasColuna+"-"+coluna).style.backgroundColor  = "#008b8b";
+            document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "visible";
+            document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "hidden";
+        } else {
+            document.getElementById("posicao"+qtdPecasColuna+"-"+coluna).style.backgroundColor  = "#8b0000";
+            document.getElementsByClassName("fundoComputador")[0].style["visibility"] = "hidden";
+            document.getElementsByClassName("fundoPessoa")[0].style["visibility"] = "visible";
+        }
+        document.getElementsByClassName("bolinhaDesce"+coluna)[0].style["display"] = "none";
+        div.removeAttr('style');
+    });
+    fimAnimacao = true;
+}

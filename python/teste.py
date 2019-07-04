@@ -1,6 +1,14 @@
 from QuatroEmLinha import QuatroEmLinha
 
-jogo = QuatroEmLinha()
-jogo.estado_atual.carrega_sequencia_jogadas("6146", 1)
+def printa():
+    print(jogo.printa_bits(jogo.estado_atual.tabuleiro[0]))
+    print(jogo.printa_bits_matriz(jogo.estado_atual.tabuleiro[0]))
+    print(jogo.estado_atual.posicao_proximas_jogadas)
 
-pontuacao, coluna_para_jogar = jogo.encontrar_solucao()
+
+jogo = QuatroEmLinha()
+jogo.estado_atual.carrega_sequencia_jogadas("675747", 1)
+
+jogo.printa_bits((jogo.estado_atual.tabuleiro[0] ^ jogo.estado_atual.tabuleiro[1]) & jogo.estado_atual.top_mask(0))
+
+pontuacao, coluna_para_jogar, responsavel_pela_jogada = jogo.encontrar_solucao()
