@@ -100,7 +100,7 @@ function efetuarJogada(coluna){
 
         // # Efetua jogada IA
         const urlJogadaIA= "http://localhost:5000?jogadas=" + colunasJogadas.toString()
-            + "&dificuldade=3";
+            + "&dificuldade=" + dificuldade;
 
         $.getJSON(urlJogadaIA, function(data){
             if(fimDeJogo) return false;
