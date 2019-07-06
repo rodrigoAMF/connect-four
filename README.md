@@ -1,2 +1,2 @@
-# 4-in-a-row
-Implementation of 4 in a row game using Javascript and AI
+# Connect Four
+Implementation of Connect Four game using Javascript and AI
